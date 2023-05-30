@@ -1,3 +1,7 @@
+import gevent.monkey
+
+gevent.monkey.patch_all()
+
 from flask_migrate import Migrate
 
 from dotenv import load_dotenv

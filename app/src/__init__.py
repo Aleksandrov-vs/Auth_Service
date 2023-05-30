@@ -1,8 +1,8 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-from api.v1.controller.hello_controller import hello_bp
-from core.config import settings
+from src.api.v1.hello_controller import hello_bp
+from src.core.config import settings
 
 db = SQLAlchemy()
 
