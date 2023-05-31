@@ -23,9 +23,6 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
     security.init_app(app)
-
-    # with app.app_context():
-    #     db.create_all()
-    #     app.logger.info('Initialized database complete.')
+    app.logger.info('Initialized database complete.')
 
     return app
