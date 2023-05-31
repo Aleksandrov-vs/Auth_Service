@@ -1,11 +1,13 @@
 import uuid
-from sqlalchemy.dialects.postgresql import UUID
 
-from src import db
+from sqlalchemy.dialects.postgresql import UUID
+from flask_security import UserMixin
+
+from .db import db
 from .role import Role
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = 'users'
 
     id = db.Column(
@@ -22,4 +24,4 @@ class User(db.Model):
     )
 
     def __repr__(self):
-        return f'<User {self.login}:{self.roles}>'
+        return f'<User {self.login}>'

@@ -39,8 +39,8 @@ services:
       - API
     volumes:
       - ./postgresql/data:/var/lib/postgresql/data
-    expose:
-      - ${POSTGRES_PORT}
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
 
 
   api:

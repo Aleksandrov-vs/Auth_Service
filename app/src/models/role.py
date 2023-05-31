@@ -1,11 +1,13 @@
 import uuid
 from datetime import datetime
+
 from sqlalchemy.dialects.postgresql import UUID
+from flask_security import RoleMixin
 
-from src import db
+from .db import db
 
 
-class Role(db.Model):
+class Role(db.Model, RoleMixin):
     __tablename__ = 'role'
 
     id = db.Column(

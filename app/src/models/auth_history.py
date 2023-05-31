@@ -1,8 +1,9 @@
 import uuid
 from datetime import datetime
+
 from sqlalchemy.dialects.postgresql import UUID
 
-from src import db
+from .db import db
 from .user import User
 
 
