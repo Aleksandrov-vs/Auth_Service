@@ -24,6 +24,7 @@ MarkupSafe==2.1.2
 marshmallow==3.19.0
 packaging==23.1
 passlib==1.7.4
+psycopg2-binary==2.9.6
 pydantic==1.10.8
 PyJWT==2.7.0
 python-dotenv==1.0.0
