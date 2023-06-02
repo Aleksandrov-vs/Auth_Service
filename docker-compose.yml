@@ -39,14 +39,13 @@ services:
       - API
     volumes:
       - ./postgresql/data:/var/lib/postgresql/data
-      - ./etl/dump:/docker-entrypoint-initdb.d
-    expose:
-      - ${POSTGRES_PORT}
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
 
 
   api:
     build:
-      context: app
+      context: auth_api
     env_file:
       - .env
     expose:

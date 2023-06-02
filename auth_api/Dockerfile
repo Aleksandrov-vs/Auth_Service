@@ -10,4 +10,6 @@ RUN  pip install --upgrade pip \
 
 COPY . .
 
-ENTRYPOINT gunicorn manage:app -w $WORKERS --worker-class=gevent --bind $API_HOST:$API_PORT
+RUN chmod +x /opt/app/flask-entrypoint.sh
+
+ENTRYPOINT ["/opt/app/flask-entrypoint.sh"]
