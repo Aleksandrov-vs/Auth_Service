@@ -1,3 +1,5 @@
+import logging
+
 from flask import Flask
 
 from src.api.v1.hello_controller import hello_bp

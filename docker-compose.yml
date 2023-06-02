@@ -45,7 +45,7 @@ services:
 
   api:
     build:
-      context: app
+      context: auth_api
     env_file:
       - .env
     expose:
