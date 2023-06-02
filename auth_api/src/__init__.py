@@ -5,6 +5,9 @@ from flask import Flask
 from src.api.v1.hello_controller import hello_bp
 from src.core.config import settings
 from src.models.db import db
+from src.models import auth_history
+from src.models import role
+from src.models import user
 from src.models.utils import migrate, security
 
 
