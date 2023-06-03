@@ -3,7 +3,10 @@ from logging import config as logging_config
 from pydantic import BaseSettings, Field
 
 from src.core.logger import LOGGING
+from dotenv import load_dotenv
 
+
+load_dotenv()
 logging_config.dictConfig(LOGGING)
 
 
