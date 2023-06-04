@@ -26,12 +26,14 @@ def login():
 
 @token.route('/logout')
 def logout():
+    token_service = get_token_service(token_rep.get_token_repository())
     response = token_service.logout()
     return jsonify(response)
 
 
 @token.route('/refresh-tokens')
 def refresh_tokens():
+    token_service = get_token_service(token_rep.get_token_repository())
     response = token_service.refresh_tokens()
     return jsonify(response)
 

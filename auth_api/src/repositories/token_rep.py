@@ -7,6 +7,8 @@ from src.models.role import Role
 from src.models.user import User
 from flask_sqlalchemy import session
 
+from typing import Union
+
 
 class TokenRepository:
 
@@ -14,7 +16,7 @@ class TokenRepository:
         self._redis = redis_cli
         self._postgres_session = db_session
 
-    def _set(self, key: str, expire: int, value: str | int):
+    def _set(self, key: str, expire: int, value: Union[str, int]):
         self._redis.setex(key, expire, value)
 
     def _get(self, value):
@@ -46,7 +48,7 @@ class TokenRepository:
         self._postgres_session.commit()
 
 
-token_repository: TokenRepository | None = None
+token_repository: Union[TokenRepository,  None] = None
 
 
 def get_token_repository():
