@@ -3,6 +3,7 @@ import uuid
 from sqlalchemy.dialects.postgresql import UUID
 from flask_security import UserMixin
 
+from .UsersRoles import UserRole
 from .db import db
 from .role import Role
 
@@ -19,9 +20,11 @@ class User(db.Model, UserMixin):
     login = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.String, nullable=False)
     roles = db.relationship(
-        'Role',
-        secondary=Role.__table__
+        'Detail',
+        secondary=UserRole,
+        backref='User'
     )
 
     def __repr__(self):
         return f'<User {self.login}>'
+
