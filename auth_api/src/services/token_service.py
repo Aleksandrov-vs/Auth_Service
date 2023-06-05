@@ -24,12 +24,14 @@ class TokenServices:
             return HTTPStatus.NOT_FOUND, "пароль не верный"
 
         access_exp = timedelta(hours=2)
+        refresh_exp = timedelta(days=2)
         access_token, refresh_token = create_tokens(
             identity=json.dumps({'role': 'consumer'}),
             access_expires_delta=access_exp,
+            refresh_expires_delta=refresh_exp
         )
         self._repository.save_token(user.id, access_token, access_exp)
-        self._repository.save_token(user.id, access_token, access_exp)
+        self._repository.save_token(user.id, refresh_token, refresh_exp)
         return HTTPStatus.OK, {'access_token': access_token, 'refresh_token': refresh_token}
 
     def logout(self):
@@ -43,13 +45,17 @@ class TokenServices:
             return HTTPStatus.CONFLICT, "пользователь уже создан"
         pass_hash = create_hash(password)
         user_id = self._repository.save_new_user(login, pass_hash)
+
         access_exp = timedelta(hours=2)
+        refresh_exp = timedelta(days=2)
         access_token, refresh_token = create_tokens(
             identity=json.dumps({'role': 'consumer'}),
             access_expires_delta=access_exp,
+            refresh_expires_delta=refresh_exp
         )
         self._repository.save_token(user_id, access_token, access_exp)
-        self._repository.save_token(user_id, access_token, access_exp)
+        self._repository.save_token(user_id, refresh_token, refresh_exp)
+
         return HTTPStatus.OK, {'access_token': access_token, 'refresh_token': refresh_token}
 
 
