@@ -40,3 +40,4 @@ Werkzeug==2.3.4
 WTForms==3.0.1
 zope.event==4.6
 zope.interface==6.0
+redis==4.5.5
