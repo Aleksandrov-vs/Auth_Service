@@ -26,7 +26,7 @@ class LoginRequest(BaseModel):
 def login():
     token_service = get_token_service(token_rep.get_token_repository())
     body = LoginRequest(**json.loads(request.data))
-    http_status, response_msg = token_service.login(body.login, body.password)
+    http_status, response_msg = token_service.login(body.login, body.password, request.user_agent)
     return jsonify(response_msg), http_status
 
 
@@ -53,5 +53,5 @@ class RegisterRequest(BaseModel):
 def register():
     token_service = get_token_service(token_rep.get_token_repository())
     body = RegisterRequest(**json.loads(request.data))
-    http_status, response_msg = token_service.register(body.login, body.password)
+    http_status, response_msg = token_service.register(body.login, body.password, request.user_agent)
     return jsonify(response_msg), http_status

@@ -1,3 +1,4 @@
+import datetime
 from datetime import timedelta
 import json
 import logging
@@ -16,7 +17,7 @@ class TokenServices:
     def change_password(self):
         return 'change-password'
 
-    def login(self, login: str, response_password: str):
+    def login(self, login: str, response_password: str, user_agent: str):
         if not self._repository.user_is_exist(login):
             return HTTPStatus.NOT_FOUND, "пользователь с таким логином нет"
         user = self._repository.get_user_by_login(login)
@@ -32,6 +33,8 @@ class TokenServices:
         )
         self._repository.save_token(user.id, access_token, access_exp)
         self._repository.save_token(user.id, refresh_token, refresh_exp)
+
+        self._repository.save_login_history(user.id, str(user_agent), datetime.datetime.now())
         return HTTPStatus.OK, {'access_token': access_token, 'refresh_token': refresh_token}
 
     def logout(self):
@@ -40,11 +43,12 @@ class TokenServices:
     def refresh_tokens(self):
         return 'refresh-tokens'
 
-    def register(self, login: str, password: str) -> Tuple[int, any]:
+    def register(self, login: str, password: str, user_agent: str) -> Tuple[int, any]:
         if self._repository.user_is_exist(login):
             return HTTPStatus.CONFLICT, "пользователь уже создан"
         pass_hash = create_hash(password)
         user_id = self._repository.save_new_user(login, pass_hash)
+        logging.info(user_agent)
 
         access_exp = timedelta(hours=2)
         refresh_exp = timedelta(days=2)
@@ -56,6 +60,7 @@ class TokenServices:
         self._repository.save_token(user_id, access_token, access_exp)
         self._repository.save_token(user_id, refresh_token, refresh_exp)
 
+        self._repository.save_login_history(user_id, str(user_agent), datetime.datetime.now())
         return HTTPStatus.OK, {'access_token': access_token, 'refresh_token': refresh_token}
 
 

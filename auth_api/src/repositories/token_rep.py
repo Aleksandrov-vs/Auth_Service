@@ -5,6 +5,7 @@ import uuid
 from redis import Redis
 from uuid import UUID
 
+from src.models.auth_history import AuthHistory
 from src.models.role import Role
 from src.models.user import User
 from flask_sqlalchemy import session
@@ -67,6 +68,11 @@ class TokenRepository:
         self._postgres_session.add(new_user)
         self._postgres_session.commit()
         return new_user.id
+
+    def save_login_history(self, user_id: UUID, user_agent: str, auth_date: datetime.datetime):
+        new_login = AuthHistory(user_id=user_id, user_agent=user_agent, auth_date=auth_date)
+        self._postgres_session.add(new_login)
+        self._postgres_session.commit()
 
 
 token_repository: Union[TokenRepository,  None] = None
