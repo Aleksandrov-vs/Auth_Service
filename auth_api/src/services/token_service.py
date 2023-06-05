@@ -1,9 +1,12 @@
-import hashlib
+from datetime import timedelta
+import json
 import logging
-import os
 from functools import lru_cache
+from http import HTTPStatus
+from typing import Tuple
 
 from src.repositories.token_rep import TokenRepository
+from src.utils.extensions import create_hash, create_tokens
 
 
 class TokenServices:
@@ -22,14 +25,20 @@ class TokenServices:
     def refresh_tokens(self):
         return 'refresh-tokens'
 
-    def register(self, login: str, password: str):
+    def register(self, login: str, password: str) -> Tuple[int, any]:
         logging.info(self._repository)
-        if not self._repository.user_is_exist(login):
-            salt = os.urandom(32)
-            key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
-            pass_hash = salt + b":" + key
-            self._repository.save_new_user(login, pass_hash)
-        return 'register'
+        if self._repository.user_is_exist(login):
+            return HTTPStatus.CONFLICT, "пользователь уже создан"
+        pass_hash = create_hash(password)
+        user_id = self._repository.save_new_user(login, pass_hash)
+        access_exp = timedelta(hours=2)
+        access_token, refresh_token = create_tokens(
+            identity=json.dumps({'role': 'consumer'}),
+            access_expires_delta=access_exp,
+        )
+        self._repository.save_token(user_id, access_token, access_exp)
+        self._repository.save_token(user_id, access_token, access_exp)
+        return HTTPStatus.OK, {'access_token': access_token, 'refresh_token': refresh_token}
 
 
 @lru_cache()

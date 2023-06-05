@@ -2,6 +2,7 @@ import logging
 
 from flask import Flask
 import redis
+from flask_jwt_extended import JWTManager
 
 from src.api.v1.hello_controller import hello_bp
 from src.api.v1.token_controller import token
@@ -25,6 +26,8 @@ def create_app():
     app.config["SQLALCHEMY_DATABASE_URI"] = f"postgresql://{settings.postgres.user}:{settings.postgres.password}@" \
                                             f"{settings.postgres.host}:{settings.postgres.port}/{settings.postgres.dbname}"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+    jwt = JWTManager(app)
 
     redis_db = redis.Redis(host=settings.redis.host, port=settings.redis.port)
     token_rep.token_repository = token_rep.TokenRepository(redis_db, db.session)

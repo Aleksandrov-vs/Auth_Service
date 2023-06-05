@@ -47,5 +47,5 @@ class RegisterRequest(BaseModel):
 def register():
     token_service = get_token_service(token_rep.get_token_repository())
     body = RegisterRequest(**json.loads(request.data))
-    response = token_service.register(body.login, body.password)
-    return jsonify(response)
+    http_status, response_msg = token_service.register(body.login, body.password)
+    return jsonify(response_msg), http_status
