@@ -31,9 +31,17 @@ class TokenRepository:
             return True
         return False
 
-    def get_user_id_by_refresh(self, refresh_token: str) -> UUID:
+    def get_user_by_id(self, user_id: UUID) -> User:
+        user = User.query.filter_by(id=user_id).first()
+        return user
+
+    def get_user_by_login(self, login: str) -> User:
+        user = User.query.filter_by(login=login).first()
+        return user
+
+    def get_user_by_refresh(self, refresh_token: str) -> User:
         user_id = self._get(refresh_token)
-        return UUID(user_id)
+        return self.get_user_by_id(user_id)
 
     def save_token(self, user_id: UUID, new_token: str, new_token_exp:  datetime.timedelta):
         self._set(new_token, new_token_exp, str(user_id))
@@ -51,7 +59,8 @@ class TokenRepository:
         pipeline.delete(old_refresh)
         pipeline.execute()
 
-    def save_new_user(self, login, pass_hash) -> UUID:
+    def save_new_user(self, login, pass_hash: bytes) -> UUID:
+        logging.info(type(pass_hash))
         consumer_role = Role.query.filter_by(name='consumer').first()
         new_user = User(login=login, password=pass_hash)
         new_user.roles.append(consumer_role)

@@ -19,7 +19,7 @@ class User(db.Model, UserMixin):
         unique=True,
         nullable=False)
     login = db.Column(db.String, unique=True, nullable=False)
-    password = db.Column(db.String, nullable=False)
+    password = db.Column(db.LargeBinary, nullable=False)
     roles = relationship("Role", secondary=user_role_table, back_populates="users")
 
     def __repr__(self):

@@ -17,11 +17,17 @@ def change_password():
     return jsonify(response)
 
 
-@token.route('/login')
+class LoginRequest(BaseModel):
+    login: str
+    password: str
+
+
+@token.route('/login',  methods=["POST"])
 def login():
     token_service = get_token_service(token_rep.get_token_repository())
-    response = token_service.login()
-    return jsonify(response)
+    body = LoginRequest(**json.loads(request.data))
+    http_status, response_msg = token_service.login(body.login, body.password)
+    return jsonify(response_msg), http_status
 
 
 @token.route('/logout')

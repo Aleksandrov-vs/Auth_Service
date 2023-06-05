@@ -260,7 +260,7 @@ components:
     UserRegistration:
       type: object
       properties:
-        username:
+        login:
           type: string
         password:
           type: string
@@ -271,7 +271,7 @@ components:
     UserLogin:
       type: object
       properties:
-        username:
+        login:
           type: string
         password:
           type: string
