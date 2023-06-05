@@ -1,5 +1,4 @@
-from redis import Redis
-from uuid import UUID
+import json
 
 from src.models.role import Role
 from flask_sqlalchemy import session
@@ -12,31 +11,40 @@ class RoleRepository:
 
     def create_role(self, login: str) -> Role:
         """Создать роль."""
-        new_role = Role(name=login)
-        self._postgres_session.add(new_role)
-        self._postgres_session.commit()
-        return new_role
-
-    def delete_role(self, role_id: UUID) -> None:
-        """Удалить роль."""
-        if Role.query.filter_by(id=role_id).delete():
-            self._postgres_session.commit()
+        role = Role.query.filter_by(name=login).first()
+        if role:
+            return {'message': 'Role already exists.'}
         else:
-            'Role does not exists.'
+            new_role = Role(name=login)
+            self._postgres_session.add(new_role)
+            self._postgres_session.commit()
+            return {'role_id': new_role.id, 'name': new_role.name}
 
-    def update_role(self, role_id: UUID, name: str) -> Role:
+    def delete_role(self, name: str) -> None:
+        """Удалить роль."""
+        if Role.query.filter_by(name=name).delete():
+            self._postgres_session.commit()
+            return {'message': 'Role successfully deleted.'}
+        return {'message': 'Role does not exists.'}
+
+    def update_role(self, name: str, new_name: str) -> Role:
         """Обновление роли."""
-        role = Role.query.filter_by(id=role_id)
-        role.name = name
-        self._postgres_session.commit()
-        return role
+        update_role = Role.query.filter_by(name=name).first()
+        if update_role:
+            new_name_role = Role.query.filter_by(name=new_name).first()
+            if new_name_role:
+                return {'message': 'Role already exists.'}
+            update_role.name = new_name
+            self._postgres_session.commit()
+            return {'role_id': update_role.id, 'name': update_role.name}
+        return {'message': 'No role was found'}
 
-    def viewing_role(self, role_id: UUID) -> Role:
+    def viewing_role(self, name: str) -> Role | dict[str]:
         """Просмотр роли."""
-        role = Role.query.filter_by(id=role_id).first()
+        role = Role.query.filter_by(name=name).first()
         if not role:
-            return 'No role was found'
-        return role
+            return {'message': 'No role was found'}
+        return {'role_id': role.id, 'name': role.name}
 
 
 role_repository: RoleRepository | None = None

@@ -6,27 +6,28 @@ from src.repositories.role_rep import RoleRepository
 from src.models.role import Role
 
 
-class RoleServices:
+class RoleService:
     def __init__(self, role_rep: RoleRepository):
         self._repository = role_rep
 
     def create_role(self, login: str) -> Role:
-        new_role = self._repository.create_role(login)
-        return new_role
-
-    def delete_role(self, role_id: UUID):
-        self._repository.delete_role(role_id)
-
-    def update_role(self, role_id: UUID, name: str) -> Role:
-        role = self._repository.update_role(role_id=role_id, name=name)
+        role = self._repository.create_role(login)
         return role
 
-    def viewing_role(self, role_id: UUID) -> Role:
-        role = self._repository.viewing_role(role_id)
+    def delete_role(self, name: str):
+        result = self._repository.delete_role(name)
+        return result
+
+    def update_role(self, name: str, new_name: str) -> Role:
+        role = self._repository.update_role(name=name, new_name=new_name)
+        return role
+
+    def viewing_role(self, name: str) -> Role | None:
+        role = self._repository.viewing_role(name=name)
         return role
 
 
 @lru_cache()
-def get_token_service(role_repository: RoleRepository):
+def get_role_service(role_repository: RoleRepository):
     logging.info('init RoleServices')
-    return RoleRepository(role_repository)
+    return RoleService(role_repository)

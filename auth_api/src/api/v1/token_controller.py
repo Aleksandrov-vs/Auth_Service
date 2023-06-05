@@ -1,5 +1,3 @@
-import logging
-
 from flask import Blueprint, jsonify, request, json
 from pydantic import BaseModel
 
