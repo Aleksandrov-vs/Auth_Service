@@ -19,15 +19,20 @@ class TokenRepository:
         self._redis = redis_cli
         self._postgres_session = db_session
 
-    def _set(self, key: str, expire: Union[int, float], value: Union[str, int]):
+    def _set(self, key: str, expire: Union[int, float, datetime.timedelta], value: Union[str, int]):
         self._redis.setex(key, expire, value)
 
     def _get(self, value):
         return self._redis.get(value)
 
+    def user_is_exist_by_id(self, user_id: UUID):
+        existing_user = User.query.filter_by(id=user_id).first()
+        if existing_user:
+            return True
+        return False
+
     def user_is_exist(self, login: str):
         existing_user = User.query.filter_by(login=login).first()
-        logging.warning(existing_user)
         if existing_user:
             return True
         return False
@@ -44,19 +49,21 @@ class TokenRepository:
         user_id = self._get(refresh_token)
         return self.get_user_by_id(user_id)
 
-    def save_token(self, user_id: UUID, new_token: str, new_token_exp:  datetime.timedelta):
-        self._set(new_token, new_token_exp, str(user_id))
+    def save_refresh_token(self, access_token: str, refresh_token: str, new_token_exp:  datetime.timedelta):
+        self._set(refresh_token, new_token_exp, access_token)
 
     def delete_refresh(self, refresh_for_del: str):
         self._redis.delete(refresh_for_del)
 
     def rework_refresh(
-            self, user_id: UUID,
-            old_refresh: str, new_refresh: str,
+            self,
+            old_refresh: str,
+            new_refresh: str,
+            new_access: str,
             new_refresh_exp: datetime.timedelta
     ):
         pipeline = self._redis.pipeline()
-        pipeline.setex(new_refresh, new_refresh_exp, str(user_id))
+        pipeline.setex(new_refresh, new_refresh_exp, str(new_access))
         pipeline.delete(old_refresh)
         pipeline.execute()
 
@@ -69,10 +76,27 @@ class TokenRepository:
         self._postgres_session.commit()
         return new_user.id
 
+    def set_new_password(self, user_id, new_pass_hash: bytes) -> UUID | None:
+        user_for_update = User.query.filter_by(id=user_id).first()
+        if user_for_update:
+            user_for_update.password = new_pass_hash
+            self._postgres_session.commit()
+            return user_for_update.id
+        else:
+            return None
+
     def save_login_history(self, user_id: UUID, user_agent: str, auth_date: datetime.datetime):
         new_login = AuthHistory(user_id=user_id, user_agent=user_agent, auth_date=auth_date)
         self._postgres_session.add(new_login)
         self._postgres_session.commit()
+
+    def get_token_inf(self, token):
+        return self._get(token)
+
+    def token_exist(self, token):
+        if self._redis.exists(token):
+            return True
+        return False
 
 
 token_repository: Union[TokenRepository,  None] = None
