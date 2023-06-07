@@ -20,11 +20,11 @@ class TokenServices:
         user_id = token_inf['user_id']
 
         if not self._repository.user_is_exist_by_id(user_id):
-            return HTTPStatus.CONFLICT, " access token is not valid"
+            return HTTPStatus.CONFLICT, {"err_msg": "Access token is not valid."}
 
         user = self._repository.get_user_by_id(user_id)
         if not check_password(old_password, user.password):
-            return HTTPStatus.NOT_FOUND, "old password is not valid"
+            return HTTPStatus.UNAUTHORIZED, {"err_msg": "Old password is not valid."}
 
         pass_hash = create_hash(new_password)
         if self._repository.set_new_password(user_id, pass_hash):
@@ -33,10 +33,11 @@ class TokenServices:
 
     def login(self, login: str, response_password: str, user_agent: str):
         if not self._repository.user_is_exist(login):
-            return HTTPStatus.NOT_FOUND, "login is not valid"
+            return HTTPStatus.UNAUTHORIZED, {'err_msg': "Login is not valid."}
+
         user = self._repository.get_user_by_login(login)
         if not check_password(response_password, user.password):
-            return HTTPStatus.NOT_FOUND, "password is not valid"
+            return HTTPStatus.UNAUTHORIZED, {'err_msg': "Password is not valid."}
 
         access_exp = timedelta(hours=2)
         refresh_exp = timedelta(days=2)
@@ -78,7 +79,7 @@ class TokenServices:
 
     def register(self, login: str, password: str, user_agent: str) -> Tuple[int, any]:
         if self._repository.user_is_exist(login):
-            return HTTPStatus.CONFLICT, "пользователь уже создан"
+            return HTTPStatus.CONFLICT, {'err_msg': "User with this login  already exists."}
         pass_hash = create_hash(password)
         user_id = self._repository.save_new_user(login, pass_hash)
         logging.info(user_agent)

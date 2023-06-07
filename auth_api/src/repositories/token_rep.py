@@ -68,8 +68,9 @@ class TokenRepository:
         pipeline.execute()
 
     def save_new_user(self, login, pass_hash: bytes) -> UUID:
-        logging.info(type(pass_hash))
         consumer_role = Role.query.filter_by(name='consumer').first()
+        if not consumer_role:
+            consumer_role = Role(name='consumer', created=datetime.datetime.now())
         new_user = User(login=login, password=pass_hash)
         new_user.roles.append(consumer_role)
         self._postgres_session.add(new_user)
