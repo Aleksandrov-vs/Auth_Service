@@ -8,9 +8,6 @@ services:
     image: app_test
     env_file:
       - .env
-    depends_on:
-      - redis_test
-      - pg
 
   redis_test:
     container_name: redis_test
@@ -29,5 +26,3 @@ services:
     build: .
     env_file:
       - .env
-    depends_on:
-      - api_test

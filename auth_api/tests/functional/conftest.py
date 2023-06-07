@@ -22,7 +22,8 @@ async def session_client():
 @pytest.fixture(scope='function')
 def make_get_request(session_client: aiohttp.ClientSession):
     async def inner(
-            url: str, params: dict = None, method: str = None, data: dict = None):
+            url: str, params: dict = None,
+            method: str = None, data: dict = None, headers: dict = None):
 
         if method == 'GET' or method == None:
             async with session_client.get(url, params=params) as response:
@@ -33,6 +34,7 @@ def make_get_request(session_client: aiohttp.ClientSession):
         if method == 'POST':
             async with session_client.post(url, json=data) as response:
                 body = await response.json()
+                print(body)
                 status = response.status
                 return body, status
 
