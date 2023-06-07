@@ -10,24 +10,24 @@ services:
       - .env
     depends_on:
       - redis_test
-    ports:
-      - ${API_PORT}:${API_PORT}
+      - pg
 
   redis_test:
     container_name: redis_test
     image: redis:7-alpine
-    restart: always
     env_file:
       - .env
-    ports:
-      - ${REDIS_PORT}:${REDIS_PORT}
+
+  pg:
+    container_name: pg_test
+    image: postgres:13
+    env_file:
+      - .env
 
   tests:
     container_name: tests
     build: .
     env_file:
       - .env
-    entrypoint: >
-      sh -c "pip install -r /tests/functional/requirements.txt
-      && python3 /tests/functional/utils/wait_for_redis.py
-      && pytest /tests/functional/src"
+    depends_on:
+      - api_test

@@ -3,8 +3,6 @@ import aiohttp
 import pytest
 import pytest_asyncio
 
-from functional.settings import test_settings
-
 
 @pytest.fixture(scope="session")
 def event_loop():
@@ -23,11 +21,20 @@ async def session_client():
 
 @pytest.fixture(scope='function')
 def make_get_request(session_client: aiohttp.ClientSession):
-    async def inner(url: str, params: dict = None):
-        async with session_client.get(url, params=params) as response:
-            body = await response.json()
-            status = response.status
-            print(body)
-            return body, status
+    async def inner(
+            url: str, params: dict = None, method: str = None, data: dict = None):
+
+        if method == 'GET' or method == None:
+            async with session_client.get(url, params=params) as response:
+                body = await response.json()
+                status = response.status
+                return body, status
+
+        if method == 'POST':
+            async with session_client.post(url, json=data) as response:
+                body = await response.json()
+                status = response.status
+                return body, status
+
 
     return inner
