@@ -46,7 +46,7 @@ class LogoutRequest(BaseModel):
     refresh_token: str
 
 
-@token.route('/logout')
+@token.route('/logout',  methods=["POST"])
 @body_fields_validate_with_pydantic(LogoutRequest)
 def logout(body: LogoutRequest):
     token_service = get_token_service(token_rep.get_token_repository())

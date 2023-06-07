@@ -53,7 +53,10 @@ class TokenRepository:
         self._set(refresh_token, new_token_exp, access_token)
 
     def delete_refresh(self, refresh_for_del: str):
-        self._redis.delete(refresh_for_del)
+        if self._redis.exists(refresh_for_del):
+            self._redis.delete(refresh_for_del)
+            return True
+        return False
 
     def rework_refresh(
             self,

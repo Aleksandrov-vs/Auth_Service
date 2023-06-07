@@ -52,8 +52,9 @@ class TokenServices:
         return HTTPStatus.OK, {'access_token': access_token, 'refresh_token': refresh_token}
 
     def logout(self, refresh_token):
-        self._repository.delete_refresh(refresh_token)
-        return HTTPStatus.OK, 'you are logout'
+        if self._repository.delete_refresh(refresh_token):
+            return HTTPStatus.OK, 'you are logout'
+        return HTTPStatus.BAD_REQUEST, {'err_msg': 'refresh is not valid'}
 
     def refresh_tokens(self, old_refresh_token: str):
         if self._repository.token_exist(old_refresh_token):
