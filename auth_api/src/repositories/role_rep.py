@@ -39,13 +39,16 @@ class RoleRepository:
             self._postgres_session.commit()
             return {'role_id': update_role.id, 'name': update_role.name}
 
-        return {'message': 'No role was found'}
+        return {'message': 'No role was found.'}
 
     def viewing_roles(self) -> list[Role]:
         """Просмотр всех ролей."""
         roles = Role.query.all()
         if not roles:
-            return {'message': 'No roles was found'}
+            return {'message': 'No roles was found.'}
+        
+        if len(roles) == 1:
+            return {'role_id': roles[0].id, 'name': roles[0].name}
 
         return [{str(role.id): role.name} for role in roles]
 

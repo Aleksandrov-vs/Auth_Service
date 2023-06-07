@@ -34,7 +34,18 @@ def make_get_request(session_client: aiohttp.ClientSession):
         if method == 'POST':
             async with session_client.post(url, json=data) as response:
                 body = await response.json()
-                print(body)
+                status = response.status
+                return body, status
+
+        if method == 'DELETE':
+            async with session_client.delete(url, json=data) as response:
+                body = await response.json()
+                status = response.status
+                return body, status
+
+        if method == 'PUT':
+            async with session_client.put(url, json=data) as response:
+                body = await response.json()
                 status = response.status
                 return body, status
 
