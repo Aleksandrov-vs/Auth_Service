@@ -75,8 +75,8 @@ class TokenServices:
                     new_access_token, refresh_exp
                 )
                 return HTTPStatus.OK, {'access_token': new_access_token, 'refresh_token': new_refresh_token}
-            return HTTPStatus.NOT_FOUND, 'refresh token is not valid'
-        return HTTPStatus.NOT_FOUND, 'refresh token is not exist'
+            return HTTPStatus.BAD_REQUEST, 'refresh token is not valid'
+        return HTTPStatus.BAD_REQUEST, {'err_msg': 'refresh token is not exist'}
 
     def register(self, login: str, password: str, user_agent: str) -> Tuple[int, any]:
         if self._repository.user_is_exist(login):
