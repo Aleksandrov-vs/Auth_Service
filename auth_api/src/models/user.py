@@ -6,7 +6,6 @@ from sqlalchemy.orm import relationship
 
 from .user_role import user_role_table
 from .db import db
-from .role import Role
 
 
 class User(db.Model, UserMixin):
@@ -20,7 +19,7 @@ class User(db.Model, UserMixin):
         nullable=False)
     login = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.String, nullable=False)
-    roles = relationship("Role", secondary=user_role_table, back_populates="users")
+    roles = relationship('Role', secondary=user_role_table, back_populates='users')
 
     def __repr__(self):
         return f'<User {self.login}>'
