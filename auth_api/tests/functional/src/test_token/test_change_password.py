@@ -121,7 +121,7 @@ pytestmark = pytest.mark.asyncio
         ),
     ]
 )
-async def test_register(make_get_request, query_data: dict, expected_answer: dict):
+async def test_change_password(make_get_request, query_data: dict, expected_answer: dict):
     url = test_settings.service_url + '/api/v1/auth/change-password'
     # регистрация пользователя
     reg_body, reg_status = await make_get_request(
