@@ -1,5 +1,4 @@
 import asyncio
-import json
 
 import aiohttp
 import pytest
@@ -7,6 +6,11 @@ import pytest_asyncio
 from redis.asyncio import Redis
 
 from functional.settings import test_settings
+
+
+pytest_plugins = [
+   "functional.fixtures.create_pg_data",
+]
 
 
 @pytest.fixture(scope="session")
@@ -17,7 +21,7 @@ def event_loop():
     loop.close()
 
 
-@pytest_asyncio.fixture(scope='function')
+@pytest_asyncio.fixture(scope='session')
 async def session_client():
     session = aiohttp.ClientSession()
     yield session
@@ -31,7 +35,7 @@ async def redis_client():
     await client.close()
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope='session')
 def make_get_request(session_client: aiohttp.ClientSession):
     async def inner(
             url: str, params: dict = None,
@@ -50,16 +54,14 @@ def make_get_request(session_client: aiohttp.ClientSession):
                 return body, status
 
         if method == 'DELETE':
-            async with session_client.delete(url, json=data) as response:
+            async with session_client.delete(url, json=data, headers=headers) as response:
                 body = await response.json()
                 status = response.status
                 return body, status
 
         if method == 'PUT':
-            async with session_client.put(url, json=data) as response:
+            async with session_client.put(url, json=data, headers=headers) as response:
                 body = await response.json()
                 status = response.status
                 return body, status
-
-
     return inner

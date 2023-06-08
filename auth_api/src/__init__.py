@@ -15,6 +15,7 @@ from src.models import role
 from src.models import user
 from src.models.utils import migrate, security
 from src.repositories import token_rep, role_rep
+from src.utils.create_superuser import create_superuser
 
 
 def create_app():
@@ -34,14 +35,15 @@ def create_app():
 
     redis_db = redis.Redis(host=settings.redis.host, port=settings.redis.port)
     token_rep.token_repository = token_rep.TokenRepository(redis_db, db.session)
-    logging.info(f'token repository is: {token_rep.token_repository}')
 
     role_rep.role_repository = role_rep.RoleRepository(db.session)
-    logging.info(f'role repository is: {role_rep.role_repository}')
 
     app.register_blueprint(hello_bp)
     app.register_blueprint(token)
     app.register_blueprint(role_bp)
+
+    #register command
+    app.cli.add_command(create_superuser)
 
     # Database initialization
     db.init_app(app)
