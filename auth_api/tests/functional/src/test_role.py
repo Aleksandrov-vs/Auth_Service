@@ -1,3 +1,4 @@
+import logging
 import os
 import sys
 from http import HTTPStatus
@@ -16,19 +17,22 @@ pytestmark = pytest.mark.asyncio
     'query_data, expected_answer, expected_status',
     [
         (
-            {'name': 'admin'}, 'admin', HTTPStatus.OK
+            {'name': 'test_role'}, 'test_role', HTTPStatus.OK
         )
     ]
 )
-async def test_role_create(make_get_request, query_data, expected_answer, expected_status):
+async def test_role_create(admin_tokens, make_get_request, query_data, expected_answer, expected_status):
     url = test_settings.service_url + '/api/v1/auth/roles'
 
+    tokens = admin_tokens
     body, status = await make_get_request(
         url,
         method='POST',
-        data=query_data
+        data=query_data,
+        headers={
+            "Authorization": f"Bearer {tokens.get('access_token')}"
+        }
     )
-
     assert body['name'] == expected_answer
     assert status == expected_status
 
@@ -37,17 +41,21 @@ async def test_role_create(make_get_request, query_data, expected_answer, expect
     'query_data, expected_answer, expected_status',
     [
         (
-            {'name': 'admin', 'new_name': 'admin'}, {'message': 'Role already exists.'}, HTTPStatus.OK
+            {'name': 'test_role', 'new_name': 'test_role'}, {'message': 'Role already exists.'}, HTTPStatus.OK
         )
     ]
 )
-async def test_role_update_exists(make_get_request, query_data, expected_answer, expected_status):
+async def test_role_update_exists(admin_tokens, make_get_request, query_data, expected_answer, expected_status):
     url = test_settings.service_url + '/api/v1/auth/roles/update'
 
+    tokens = admin_tokens
     body, status = await make_get_request(
         url,
         method='PUT',
-        data=query_data
+        data=query_data,
+        headers={
+            "Authorization": f"Bearer {tokens.get('access_token')}"
+        }
     )
 
     assert body == expected_answer
@@ -58,17 +66,21 @@ async def test_role_update_exists(make_get_request, query_data, expected_answer,
     'query_data, expected_answer, expected_status',
     [
         (
-            {'name': 'admin'}, {'message': 'Role already exists.'}, HTTPStatus.OK
+            {'name': 'test_role'}, {'message': 'Role already exists.'}, HTTPStatus.OK
         )
     ]
 )
-async def test_role_create_replay(make_get_request, query_data, expected_answer, expected_status):
+async def test_role_create_replay(admin_tokens, make_get_request, query_data, expected_answer, expected_status):
     url = test_settings.service_url + '/api/v1/auth/roles'
 
+    tokens = admin_tokens
     body, status = await make_get_request(
         url,
         method='POST',
-        data=query_data
+        data=query_data,
+        headers={
+            "Authorization": f"Bearer {tokens.get('access_token')}"
+        }
     )
 
     assert body == expected_answer
@@ -79,17 +91,21 @@ async def test_role_create_replay(make_get_request, query_data, expected_answer,
     'query_data, expected_answer, expected_status',
     [
         (
-            {'name': 'admin', 'new_name': 'like a boss'}, 'like a boss', HTTPStatus.OK
+            {'name': 'test_role', 'new_name': 'like a boss'}, 'like a boss', HTTPStatus.OK
         )
     ]
 )
-async def test_role_update(make_get_request, query_data, expected_answer, expected_status):
+async def test_role_update(admin_tokens, make_get_request, query_data, expected_answer, expected_status):
     url = test_settings.service_url + '/api/v1/auth/roles/update'
 
+    tokens = admin_tokens
     body, status = await make_get_request(
         url,
         method='PUT',
-        data=query_data
+        data=query_data,
+        headers={
+            "Authorization": f"Bearer {tokens.get('access_token')}"
+        }
     )
 
     assert body['name'] == expected_answer
@@ -100,19 +116,22 @@ async def test_role_update(make_get_request, query_data, expected_answer, expect
     'expected_answer, expected_status',
     [
         (
-            'like a boss', HTTPStatus.OK
+            [['admin'], ['like a boss']], HTTPStatus.OK
         )
     ]
 )
-async def test_role_viewing(make_get_request, expected_answer, expected_status):
+async def test_role_viewing(admin_tokens, make_get_request, expected_answer, expected_status):
     url = test_settings.service_url + '/api/v1/auth/roles/view'
-
+    tokens = admin_tokens
     body, status = await make_get_request(
         url,
-        method='GET'
+        method='GET',
+        headers={
+            "Authorization": f"Bearer {tokens.get('access_token')}"
+        }
     )
-
-    assert body['name'] == expected_answer
+    exists_role_names = list(map(lambda b: list(b.values()), body))
+    assert exists_role_names == expected_answer
     assert status == expected_status
 
 
@@ -123,37 +142,20 @@ async def test_role_viewing(make_get_request, expected_answer, expected_status):
             {'name': 'like a boss'}, {'message': 'Role successfully deleted.'}, HTTPStatus.OK
         ),
         (
-            {'name': 'admin'}, {'message': 'Role does not exists.'}, HTTPStatus.OK
+            {'name': 'test_role'}, {'message': 'Role does not exists.'}, HTTPStatus.OK
         )
     ]
 )
-async def test_role_delete(make_get_request, query_data, expected_answer, expected_status):
+async def test_role_delete(admin_tokens, make_get_request, query_data, expected_answer, expected_status):
     url = test_settings.service_url + '/api/v1/auth/roles/delete'
-
+    tokens = admin_tokens
     body, status = await make_get_request(
         url,
         method='DELETE',
-        data=query_data
-    )
-
-    assert body == expected_answer
-    assert status == expected_status
-
-
-@pytest.mark.parametrize(
-    'expected_answer, expected_status',
-    [
-        (
-            {'message': 'No roles was found.'}, HTTPStatus.OK
-        )
-    ]
-)
-async def test_role_viewing_reply(make_get_request, expected_answer, expected_status):
-    url = test_settings.service_url + '/api/v1/auth/roles/view'
-
-    body, status = await make_get_request(
-        url,
-        method='GET'
+        data=query_data,
+        headers={
+            "Authorization": f"Bearer {tokens.get('access_token')}"
+        }
     )
 
     assert body == expected_answer

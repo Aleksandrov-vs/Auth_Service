@@ -42,7 +42,7 @@ class TokenServices:
         access_exp = timedelta(hours=2)
         refresh_exp = timedelta(days=2)
         access_token, refresh_token = create_tokens(
-            identity=json.dumps({'role': 'consumer', 'user_id': str(user.id)}),
+            identity=json.dumps({'roles': str(user.roles), 'user_id': str(user.id)}),
             access_expires_delta=access_exp,
             refresh_expires_delta=refresh_exp
         )
@@ -66,7 +66,7 @@ class TokenServices:
                 access_exp = timedelta(hours=2)
                 refresh_exp = timedelta(days=2)
                 new_access_token, new_refresh_token = create_tokens(
-                    identity=json.dumps({'role': 'consumer',  'user_id': str(user_id)}),
+                    identity=json.dumps({'roles': 'consumer',  'user_id': str(user_id)}),
                     access_expires_delta=access_exp,
                     refresh_expires_delta=refresh_exp
                 )
@@ -83,12 +83,13 @@ class TokenServices:
             return HTTPStatus.CONFLICT, {'err_msg': "User with this login  already exists."}
         pass_hash = create_hash(password)
         user_id = self._repository.save_new_user(login, pass_hash)
+        user = self._repository.get_user_by_id(user_id)
         logging.info(user_agent)
 
         access_exp = timedelta(hours=2)
         refresh_exp = timedelta(days=2)
         access_token, refresh_token = create_tokens(
-            identity=json.dumps({'role': 'consumer', 'user_id': str(user_id)}),
+            identity=json.dumps({'roles': user.roles, 'user_id': str(user.id)}),
             access_expires_delta=access_exp,
             refresh_expires_delta=refresh_exp
         )

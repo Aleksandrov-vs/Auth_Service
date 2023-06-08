@@ -1,4 +1,5 @@
 import json
+import logging
 from typing import Type
 from functools import wraps
 from http import HTTPStatus
@@ -44,7 +45,7 @@ def check_user_has_role(role_name: str):
                 token_inf = json.loads(get_jwt_identity())
             except json.JSONDecodeError:
                 return jsonify({'err_msg': 'Invalid jwt token'}), HTTPStatus.BAD_REQUEST
-            if token_inf['role'] != role_name:
+            if role_name not in token_inf['roles']:
                 return jsonify({'err_msg': 'Access denied'}), HTTPStatus.FORBIDDEN
             res = func(*args, **kwargs)
             return res
