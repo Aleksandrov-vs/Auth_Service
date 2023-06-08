@@ -41,8 +41,9 @@ class TokenServices:
 
         access_exp = timedelta(hours=2)
         refresh_exp = timedelta(days=2)
+        role_names = [role.name for role in user.roles]
         access_token, refresh_token = create_tokens(
-            identity=json.dumps({'roles': str(user.roles), 'user_id': str(user.id)}),
+            identity=json.dumps({'roles': role_names, 'user_id': str(user.id)}),
             access_expires_delta=access_exp,
             refresh_expires_delta=refresh_exp
         )
@@ -59,14 +60,16 @@ class TokenServices:
     def refresh_tokens(self, old_refresh_token: str):
         if self._repository.token_exist(old_refresh_token):
             token_inf = decode_token(old_refresh_token)
-            logging.info(token_inf)
             if token_inf['type'] == 'refresh':
                 token_sub_inf: dict = json.loads(token_inf['sub'])
                 user_id = token_sub_inf['user_id']
+                user = self._repository.get_user_by_id(user_id)
+
+                role_names = [role.name for role in user.roles]
                 access_exp = timedelta(hours=2)
                 refresh_exp = timedelta(days=2)
                 new_access_token, new_refresh_token = create_tokens(
-                    identity=json.dumps({'roles': 'consumer',  'user_id': str(user_id)}),
+                    identity=json.dumps({'roles': role_names,  'user_id': str(user_id)}),
                     access_expires_delta=access_exp,
                     refresh_expires_delta=refresh_exp
                 )
@@ -88,8 +91,9 @@ class TokenServices:
 
         access_exp = timedelta(hours=2)
         refresh_exp = timedelta(days=2)
+        role_names = [role.name for role in user.roles]
         access_token, refresh_token = create_tokens(
-            identity=json.dumps({'roles': user.roles, 'user_id': str(user.id)}),
+            identity=json.dumps({'roles': role_names, 'user_id': str(user.id)}),
             access_expires_delta=access_exp,
             refresh_expires_delta=refresh_exp
         )
