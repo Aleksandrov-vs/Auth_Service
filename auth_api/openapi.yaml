@@ -276,7 +276,7 @@ components:
         password:
           type: string
       required:
-        - username
+        - login
         - password
 
     AuthTokens:
