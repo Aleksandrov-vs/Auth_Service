@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+sleep 7
 
 alembic upgrade head
 

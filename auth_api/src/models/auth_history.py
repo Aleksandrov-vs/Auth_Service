@@ -20,7 +20,7 @@ class AuthHistory(db.Model):
         UUID(as_uuid=True),
         db.ForeignKey(
             User.id,
-            ondelete="CASCADE"
+            ondelete='CASCADE'
         ),
         nullable=False
     )

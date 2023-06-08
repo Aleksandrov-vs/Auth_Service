@@ -23,4 +23,5 @@ async def test_hello_world(make_get_request, expected_answer: dict):
     url = test_settings.service_url + '/hello_world'
     body, status = await make_get_request(url)
     logging.info(status)
+
     assert status == expected_answer['status']

@@ -1,0 +1,380 @@
+openapi: 3.0.0
+info:
+  title: API для сайта и личного кабинета
+  version: 1.0.0
+paths:
+  /api/v1/auth/register:
+    post:
+      tags:
+          - Tokens
+      summary: Регистрация пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistration'
+      responses:
+        '200':
+          description: Успешный вход
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthTokens'
+
+  /api/v1/auth/login:
+    post:
+      tags:
+            - Tokens
+      summary: Вход пользователя в аккаунт
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+      responses:
+        '200':
+          description: Успешный вход
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthTokens'
+        '401':
+          description: Неверные учетные данные
+
+  /api/v1/auth/refresh-tokens:
+    post:
+      tags:
+          - Tokens
+      summary: Обновление access и refresh токена
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshToken'
+      responses:
+        '200':
+          description: Успешное обновление токена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthTokens'
+        '401':
+          description: Неверный refresh токен
+
+  /api/v1/auth/logout:
+    post:
+      tags:
+          - Tokens
+      summary: Выход пользователя из аккаунта
+      responses:
+        '200':
+          description: Успешный выход
+
+  /api/v1/auth/change-password:
+    post:
+      tags:
+          - Tokens
+      summary: Изменение пароля пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePassword'
+      responses:
+        '200':
+          description: Успешное изменение пароля
+
+  /api/v1/auth/roles:
+    post:
+      tags:
+          - Roles CRUD
+      summary: Создание роли
+      requestBody:
+        required: true
+      parameters:
+        - in: body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRole'
+      responses:
+        '200':
+          description: Успешное создание роли
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateRole'
+          
+
+  /api/v1/auth/roles/delete:
+    delete:
+      tags:
+        - Roles CRUD
+      summary: Удаление роли
+      parameters:
+        - in: query
+          name: name
+          required: true
+          schema:
+            type: string
+            format: string
+      responses:
+        '200':
+          description: Успешное удаление роли
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteRole'
+
+  /api/v1/auth/roles/update:
+    put:
+      tags:
+        - Roles CRUD
+      summary: Изменение роли
+      parameters:
+          name: name
+          new_name: new_name
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+                - name
+                - new_name
+              format: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRole'
+      responses:
+        '200':
+          description: Успешное изменение роли
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateRole'
+
+  /api/v1/auth/roles/view:
+    get:
+      tags:
+        - Roles CRUD
+      summary: Просмотр всех ролей
+      responses:
+        '200':
+          description: Успешный просмотр ролей
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewRole'
+
+  /api/v1/auth/users/{user_id}/assign-role:
+    post:
+      tags:
+        - Users
+      summary: Назначить роль пользователю
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignRole'
+      responses:
+        '200':
+          description: Успешное назначение роли
+
+  /api/v1/auth/users/{user_id}/revoke-role:
+    post:
+      tags:
+        - Users
+      summary: Отобрать роль у пользователя
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RevokeRole'
+      responses:
+        '200':
+          description: Успешное отбирание роли
+
+  /api/v1/auth/users/{user_id}/check-role:
+    post:
+      tags:
+        - Users
+      
+      summary: Проверка наличия ролей у пользователя
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckRole'
+      responses:
+        '200':
+          description: Успешная проверка ролей
+  
+  /api/v1/auth/user/{user_id}/history:
+    get:
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      summary: Получение истории входов пользователя в аккаунт
+      responses:
+        '200':
+          description: Успешное получение истории входов
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserHistory'
+
+components:
+  schemas:
+    UserRegistration:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - login
+        - password
+
+    UserLogin:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - username
+        - password
+
+    AuthTokens:
+      type: object
+      properties:
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+
+    RefreshToken:
+      type: object
+      properties:
+        refresh_token:
+          type: string
+
+    ChangePassword:
+      type: object
+      properties:
+        old_password:
+          type: string
+        new_password:
+          type: string
+      required:
+        - old_password
+        - new_password
+
+    UserHistory:
+      type: object
+      properties:
+        login_history:
+          type: array
+          items:
+            type: object
+            properties:
+              user_id:
+                type: string
+                format: uuid
+              date:
+                type: string
+                format: date-time
+              user-agent:
+                type: string
+
+    CreateRole:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+
+
+    UpdateRole:
+      type: object
+      properties:
+        name:
+          type: string
+        new_name:
+          type: string
+      required:
+        - name
+        - new_name
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+            format: string
+          role_id:
+            type: string
+            format: uuid
+
+    DeleteRole:
+      type: object
+      properties:
+        name:
+          type: string
+          format: string
+      required:
+        - name
+
+    ViewRole:
+      type: object
+      properties:
+        roles:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                format: string
+              role_id:
+                type: string
+                format: uuid

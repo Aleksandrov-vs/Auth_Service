@@ -10,6 +10,9 @@ load_dotenv()
 
 app = create_app()
 
+for rule in app.url_map.iter_rules():
+    print(rule)
+
 
 def main():
     app.run()
