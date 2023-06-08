@@ -4,16 +4,24 @@ import json
 import aiohttp
 import pytest
 import pytest_asyncio
+import sqlalchemy
 from redis.asyncio import Redis
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 
 from functional.settings import test_settings
 
 
-@pytest.fixture(scope="function", autouse=True)
-def delete_all_pg_data():
-    def _delete(engine):
-        # define the tables to delete
+@pytest.fixture(scope='session')
+def pg_engine():
+    engine = create_engine(f"postgresql://{test_settings.pg_user}:"
+                           f"{test_settings.pg_password}@{test_settings.pg_host}"
+                           f":{test_settings.pg_port}/{test_settings.dbname}")
+    yield engine
+
+
+@pytest.fixture(scope="session", autouse=True)
+def delete_all_pg_data(pg_engine: sqlalchemy.Engine):
+    def delete(engine):
         table_names = [
             "auth_history",
             "user_role",
@@ -21,19 +29,23 @@ def delete_all_pg_data():
             "users",
         ]
 
-        with engine.begin() as conn:
+        with engine.begin() as connection:
             for table in table_names:
-                query = f"TRUNCATE {table} RESTART IDENTITY CASCADE;"
-                conn.execute(
+                query = text(f"TRUNCATE {table} RESTART IDENTITY CASCADE;")
+                connection.execute(
                     query
                 )
 
-    engine = create_engine(f"postgresql://{test_settings.pg_user}:{test_settings.pg_password}@{test_settings.pg_host}"
-                           f":{test_settings.pg_port}/{test_settings.dbname}")
-
-    _delete(engine)
+    delete(pg_engine)
     yield
-    _delete(engine)
+    delete(pg_engine)
+
+
+# @pytest.fixture(scope="session", autouse=True)
+# def super_user(session_client: aiohttp.ClientSession, pg_engine: sqlalchemy.Engine):
+#
+#     pass
+
 
 
 @pytest.fixture(scope="session")
