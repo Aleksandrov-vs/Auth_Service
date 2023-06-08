@@ -3,6 +3,7 @@ import logging
 from flask import Flask
 import redis
 from flask_jwt_extended import JWTManager
+from flask_bcrypt import Bcrypt
 
 from src.api.v1.hello_controller import hello_bp
 from src.api.v1.token_controller import token
@@ -29,6 +30,7 @@ def create_app():
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     jwt = JWTManager(app)
+    bcrypt = Bcrypt(app)
 
     redis_db = redis.Redis(host=settings.redis.host, port=settings.redis.port)
     token_rep.token_repository = token_rep.TokenRepository(redis_db, db.session)

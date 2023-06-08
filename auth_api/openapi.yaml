@@ -95,8 +95,6 @@ paths:
       summary: Создание роли
       requestBody:
         required: true
-      parameters:
-        - in: body
         content:
           application/json:
             schema:
@@ -107,45 +105,36 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateRole'
+                $ref: '#/components/schemas/Role'
           
 
-  /api/v1/auth/roles/delete:
+  /api/v1/auth/roles/{role_id}:
     delete:
       tags:
         - Roles CRUD
       summary: Удаление роли
       parameters:
-        - in: query
-          name: name
+        - in: path
+          name: role_id
           required: true
           schema:
-            type: string
-            format: string
+            type: integer
+            format: int64
       responses:
         '200':
           description: Успешное удаление роли
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DeleteRole'
 
-  /api/v1/auth/roles/update:
     put:
       tags:
         - Roles CRUD
       summary: Изменение роли
       parameters:
-          name: name
-          new_name: new_name
+        - in: path
+          name: role_id
           required: true
           schema:
-            type: array
-            items:
-              type: string
-                - name
-                - new_name
-              format: string
+            type: integer
+            format: int64
       requestBody:
         required: true
         content:
@@ -158,20 +147,26 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UpdateRole'
+                $ref: '#/components/schemas/Role'
 
-  /api/v1/auth/roles/view:
     get:
       tags:
         - Roles CRUD
-      summary: Просмотр всех ролей
+      summary: Просмотр роли
+      parameters:
+        - in: path
+          name: role_id
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         '200':
-          description: Успешный просмотр ролей
+          description: Успешный просмотр роли
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ViewRole'
+                $ref: '#/components/schemas/Role'
 
   /api/v1/auth/users/{user_id}/assign-role:
     post:
@@ -265,7 +260,7 @@ components:
     UserRegistration:
       type: object
       properties:
-        username:
+        login:
           type: string
         password:
           type: string
@@ -276,12 +271,12 @@ components:
     UserLogin:
       type: object
       properties:
-        username:
+        login:
           type: string
         password:
           type: string
       required:
-        - username
+        - login
         - password
 
     AuthTokens:
@@ -328,43 +323,46 @@ components:
 
     CreateRole:
       type: object
-      required:
-        - name
       properties:
         name:
           type: string
-
+      required:
+        - name
 
     UpdateRole:
       type: object
       properties:
-        name:
+        role_id:
           type: string
-        new_name:
-          type: string
-      required:
-        - name
-        - new_name
-      items:
-        type: object
-        properties:
-          name:
-            type: string
-            format: string
-          role_id:
-            type: string
-            format: uuid
 
-    DeleteRole:
+    Role:
       type: object
       properties:
+        role_id:
+          type: string
+          format: uuid
         name:
           type: string
-          format: string
-      required:
-        - name
 
-    ViewRole:
+    AssignRole:
+      type: object
+      properties:
+        role_id:
+          type: string
+          format: uuid
+      required:
+        - role_id
+
+    RevokeRole:
+      type: object
+      properties:
+        role_id:
+          type: string
+          format: uuid
+      required:
+        - role_id
+
+    CheckRole:
       type: object
       properties:
         roles:
@@ -372,9 +370,6 @@ components:
           items:
             type: object
             properties:
-              name:
-                type: string
-                format: string
               role_id:
                 type: string
                 format: uuid

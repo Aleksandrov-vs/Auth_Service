@@ -23,3 +23,13 @@ def validator_json_request(validator_class: Type[BaseModel]):
             return res
         return wrapper
     return decorator
+
+
+def request_has_user_agent(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if not request.headers.get('User-Agent'):
+            return jsonify({'err_msg': 'User-Agent is require.'}), 400
+        res = func(*args, **kwargs)
+        return res
+    return wrapper

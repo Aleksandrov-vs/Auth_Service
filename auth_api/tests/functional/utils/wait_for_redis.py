@@ -1,3 +1,4 @@
+import logging
 import os
 import sys
 import time
@@ -15,6 +16,9 @@ if __name__ == '__main__':
         port=test_settings.redis_port
     )
     while True:
+        print('wait for redis startup....')
+        logging.info('wait for redis startup....')
         if redis_client.ping():
+            print('Redis startup!!')
             break
         time.sleep(1)
