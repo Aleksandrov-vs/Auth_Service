@@ -8,13 +8,14 @@ from flask_bcrypt import Bcrypt
 from src.api.v1.hello_controller import hello_bp
 from src.api.v1.token_controller import token
 from src.api.v1.role_controller import role_bp
+from src.api.v1.user_controller import user_bp
 from src.core.config import settings
 from src.models.db import db
 from src.models import auth_history
 from src.models import role
 from src.models import user
 from src.models.utils import migrate, security
-from src.repositories import token_rep, role_rep
+from src.repositories import token_rep, role_rep, user_rep
 
 
 def create_app():
@@ -39,9 +40,13 @@ def create_app():
     role_rep.role_repository = role_rep.RoleRepository(db.session)
     logging.info(f'role repository is: {role_rep.role_repository}')
 
+    user_rep.user_repository = user_rep.UserRepository(db.session)
+    logging.info(f'User repository is: {user_rep.user_repository}')
+
     app.register_blueprint(hello_bp)
     app.register_blueprint(token)
     app.register_blueprint(role_bp)
+    app.register_blueprint(user_bp)
 
     # Database initialization
     db.init_app(app)
