@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request, json
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from pydantic import BaseModel
 
-from src.api.v1.utils import body_fields_validate_with_pydantic, request_has_user_agent
+from src.api.v1.utils import validator_json_request, request_has_user_agent
 from src.services.token_service import get_token_service
 from src.repositories import token_rep
 
@@ -17,7 +17,7 @@ class ChangePasswordRequest(BaseModel):
 
 @token.route('/change-password', methods=["POST"])
 @jwt_required()
-@body_fields_validate_with_pydantic(ChangePasswordRequest)
+@validator_json_request(ChangePasswordRequest)
 def change_password(body: ChangePasswordRequest):
     token_service = get_token_service(token_rep.get_token_repository())
     token_inf = json.loads(get_jwt_identity())
@@ -35,7 +35,7 @@ class LoginRequest(BaseModel):
 
 
 @token.route('/login',  methods=["POST"])
-@body_fields_validate_with_pydantic(LoginRequest)
+@validator_json_request(LoginRequest)
 def login(body: LoginRequest):
     token_service = get_token_service(token_rep.get_token_repository())
     http_status, response_msg = token_service.login(body.login, body.password, request.user_agent)
@@ -47,7 +47,7 @@ class LogoutRequest(BaseModel):
 
 
 @token.route('/logout',  methods=["POST"])
-@body_fields_validate_with_pydantic(LogoutRequest)
+@validator_json_request(LogoutRequest)
 def logout(body: LogoutRequest):
     token_service = get_token_service(token_rep.get_token_repository())
     http_status, response_msg = token_service.logout(body.refresh_token)
@@ -59,7 +59,7 @@ class ReworkTokensRequest(BaseModel):
 
 
 @token.route('/refresh-tokens', methods=["POST"])
-@body_fields_validate_with_pydantic(ReworkTokensRequest)
+@validator_json_request(ReworkTokensRequest)
 def refresh_tokens(body: ReworkTokensRequest):
     token_service = get_token_service(token_rep.get_token_repository())
     http_status, response_msg = token_service.refresh_tokens(body.refresh_token)
@@ -72,7 +72,7 @@ class RegisterRequest(BaseModel):
 
 
 @token.route('/register', methods=["POST"])
-@body_fields_validate_with_pydantic(RegisterRequest)
+@validator_json_request(RegisterRequest)
 @request_has_user_agent
 def register(body: RegisterRequest):
     token_service = get_token_service(token_rep.get_token_repository())
