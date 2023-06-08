@@ -19,8 +19,12 @@ class User(db.Model, UserMixin):
         nullable=False)
     login = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.LargeBinary, nullable=False)
-    roles = relationship("Role", secondary=user_role_table, back_populates="users")
+    roles = relationship(
+        "Role",
+        secondary=user_role_table,
+        back_populates="users",
+        passive_deletes='all'
+    )
 
     def __repr__(self):
         return f'<User {self.login}>'
-

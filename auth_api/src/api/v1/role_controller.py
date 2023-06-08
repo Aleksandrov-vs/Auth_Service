@@ -1,5 +1,3 @@
-import json
-
 from flask import Blueprint, jsonify
 from flask_jwt_extended import jwt_required
 from pydantic import BaseModel

@@ -20,11 +20,15 @@ class TokenServices:
         user_id = token_inf['user_id']
 
         if not self._repository.user_is_exist_by_id(user_id):
-            return HTTPStatus.CONFLICT, {"err_msg": "Access token is not valid."}
+            return HTTPStatus.CONFLICT, {
+                "err_msg": "Access token is not valid."
+            }
 
         user = self._repository.get_user_by_id(user_id)
         if not check_password(old_password, user.password):
-            return HTTPStatus.UNAUTHORIZED, {"err_msg": "Old password is not valid."}
+            return HTTPStatus.UNAUTHORIZED, {
+                "err_msg": "Old password is not valid."
+            }
 
         pass_hash = create_hash(new_password)
         if self._repository.set_new_password(user_id, pass_hash):
@@ -37,19 +41,28 @@ class TokenServices:
 
         user = self._repository.get_user_by_login(login)
         if not check_password(response_password, user.password):
-            return HTTPStatus.UNAUTHORIZED, {'err_msg': "Password is not valid."}
+            return HTTPStatus.UNAUTHORIZED, {
+                'err_msg': "Password is not valid."
+            }
 
         access_exp = timedelta(hours=2)
         refresh_exp = timedelta(days=2)
+        role_names = [role.name for role in user.roles]
         access_token, refresh_token = create_tokens(
-            identity=json.dumps({'role': 'consumer', 'user_id': str(user.id)}),
+            identity=json.dumps({'roles': role_names,
+                                 'user_id': str(user.id)}),
             access_expires_delta=access_exp,
             refresh_expires_delta=refresh_exp
         )
-        self._repository.save_refresh_token(access_token, refresh_token, refresh_exp)
+        self._repository.save_refresh_token(access_token,
+                                            refresh_token,
+                                            refresh_exp)
 
-        self._repository.save_login_history(user.id, str(user_agent), datetime.datetime.now())
-        return HTTPStatus.OK, {'access_token': access_token, 'refresh_token': refresh_token}
+        self._repository.save_login_history(user.id,
+                                            str(user_agent),
+                                            datetime.datetime.now())
+        return HTTPStatus.OK, {'access_token': access_token,
+                               'refresh_token': refresh_token}
 
     def logout(self, refresh_token):
         if self._repository.delete_refresh(refresh_token):
@@ -59,14 +72,17 @@ class TokenServices:
     def refresh_tokens(self, old_refresh_token: str):
         if self._repository.token_exist(old_refresh_token):
             token_inf = decode_token(old_refresh_token)
-            logging.info(token_inf)
             if token_inf['type'] == 'refresh':
                 token_sub_inf: dict = json.loads(token_inf['sub'])
                 user_id = token_sub_inf['user_id']
+                user = self._repository.get_user_by_id(user_id)
+
+                role_names = [role.name for role in user.roles]
                 access_exp = timedelta(hours=2)
                 refresh_exp = timedelta(days=2)
                 new_access_token, new_refresh_token = create_tokens(
-                    identity=json.dumps({'role': 'consumer',  'user_id': str(user_id)}),
+                    identity=json.dumps({'roles': role_names,
+                                         'user_id': str(user_id)}),
                     access_expires_delta=access_exp,
                     refresh_expires_delta=refresh_exp
                 )
@@ -74,28 +90,47 @@ class TokenServices:
                     old_refresh_token, new_refresh_token,
                     new_access_token, refresh_exp
                 )
-                return HTTPStatus.OK, {'access_token': new_access_token, 'refresh_token': new_refresh_token}
+                return HTTPStatus.OK, {'access_token': new_access_token,
+                                       'refresh_token': new_refresh_token}
+
             return HTTPStatus.BAD_REQUEST, 'refresh token is not valid'
+
         return HTTPStatus.BAD_REQUEST, {'err_msg': 'refresh token is not exist'}
 
-    def register(self, login: str, password: str, user_agent: str) -> Tuple[int, any]:
+    def register(self, login: str,
+                 password: str,
+                 user_agent: str) -> Tuple[int, any]:
         if self._repository.user_is_exist(login):
-            return HTTPStatus.CONFLICT, {'err_msg': "User with this login  already exists."}
+            return HTTPStatus.CONFLICT, {
+                'err_msg': "User with this login already exists."
+            }
         pass_hash = create_hash(password)
         user_id = self._repository.save_new_user(login, pass_hash)
+        user = self._repository.get_user_by_id(user_id)
         logging.info(user_agent)
 
         access_exp = timedelta(hours=2)
         refresh_exp = timedelta(days=2)
+        role_names = [role.name for role in user.roles]
         access_token, refresh_token = create_tokens(
-            identity=json.dumps({'role': 'consumer', 'user_id': str(user_id)}),
+            identity=json.dumps({
+                                    'roles': role_names,
+                                    'user_id': str(user.id)
+                                }),
             access_expires_delta=access_exp,
             refresh_expires_delta=refresh_exp
         )
-        self._repository.save_refresh_token(access_token, refresh_token, refresh_exp)
+        self._repository.save_refresh_token(access_token,
+                                            refresh_token,
+                                            refresh_exp)
 
-        self._repository.save_login_history(user_id, str(user_agent), datetime.datetime.now())
-        return HTTPStatus.OK, {'access_token': access_token, 'refresh_token': refresh_token}
+        self._repository.save_login_history(user_id,
+                                            str(user_agent),
+                                            datetime.datetime.now())
+        return HTTPStatus.OK, {
+                                'access_token': access_token,
+                                'refresh_token': refresh_token
+                              }
 
 
 @lru_cache()

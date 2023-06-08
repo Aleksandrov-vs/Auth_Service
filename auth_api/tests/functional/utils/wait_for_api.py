@@ -12,13 +12,14 @@ sys.path.append(parent)
 from settings import test_settings
 
 if __name__ == '__main__':
+    logger = logging.getLogger(__name__)
 
     while True:
         try:
             response = requests.get(f'{test_settings.service_url}/hello_world')
             if response.status_code == HTTPStatus.OK:
-                print('services is available!!')
+                logger.info('services is available!!')
                 break
         except requests.exceptions.ConnectionError:
-            print('api is unavailable. Wait..ю')
+            logger.info('api is unavailable. Wait...')
         time.sleep(2)

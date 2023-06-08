@@ -38,7 +38,9 @@ class LoginRequest(BaseModel):
 @validator_json_request(LoginRequest)
 def login(body: LoginRequest):
     token_service = get_token_service(token_rep.get_token_repository())
-    http_status, response_msg = token_service.login(body.login, body.password, request.user_agent)
+    http_status, response_msg = token_service.login(body.login,
+                                                    body.password,
+                                                    request.user_agent)
     return jsonify(response_msg), http_status
 
 
@@ -62,7 +64,9 @@ class ReworkTokensRequest(BaseModel):
 @validator_json_request(ReworkTokensRequest)
 def refresh_tokens(body: ReworkTokensRequest):
     token_service = get_token_service(token_rep.get_token_repository())
-    http_status, response_msg = token_service.refresh_tokens(body.refresh_token)
+    http_status, response_msg = token_service.refresh_tokens(
+        body.refresh_token
+    )
     return jsonify(response_msg), http_status
 
 
@@ -77,5 +81,7 @@ class RegisterRequest(BaseModel):
 def register(body: RegisterRequest):
     token_service = get_token_service(token_rep.get_token_repository())
     user_agent = request.headers.get('User-Agent')
-    http_status, response_msg = token_service.register(body.login, body.password, user_agent)
+    http_status, response_msg = token_service.register(body.login,
+                                                       body.password,
+                                                       user_agent)
     return jsonify(response_msg), http_status

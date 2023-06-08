@@ -19,56 +19,61 @@ pytestmark = pytest.mark.asyncio
     [
         # проверка успешного обновления токенов
         (
-                {
-                    'reg_request_body': {
-                        "login": "test_ref_1",
-                        "password": "test"
-                    },
-
+            {
+                'reg_request_body': {
+                    "login": "test_ref_1",
+                    "password": "test"
                 },
-                {
-                    'number': 0,
-                    'status': HTTPStatus.OK,
-                }
+
+            },
+            {
+                'number': 0,
+                'status': HTTPStatus.OK,
+            }
         ),
         # проверка логаута с неправильным refresh
         (
-                {
-                    'reg_request_body': {
-                        "login": "test_ref_2",
-                        "password": "test"
-                    },
-                    'ref_request': {
-                        'refresh_token': "sesieorjer.serserser.serserser"
-                    }
-
+            {
+                'reg_request_body': {
+                    "login": "test_ref_2",
+                    "password": "test"
                 },
-                {
-                    'number': 0,
-                    'status': HTTPStatus.BAD_REQUEST,
-                    'body': {'err_msg': 'refresh token is not exist'}
+                'ref_request': {
+                    'refresh_token': "sesieorjer.serserser.serserser"
                 }
+
+            },
+            {
+                'number': 0,
+                'status': HTTPStatus.BAD_REQUEST,
+                'body': {'err_msg': 'refresh token is not exist'}
+            }
         ),
         # проверка логаута без refresh
         (
-                {
-                    'reg_request_body': {
-                        "login": "test_ref_3",
-                        "password": "test"
-                    },
-                    'ref_request': {
-                    }
-
+            {
+                'reg_request_body': {
+                    "login": "test_ref_3",
+                    "password": "test"
                 },
-                {
-                    'number': 0,
-                    'status': HTTPStatus.BAD_REQUEST,
-                    'body': {'err_msg': 'Invalid json'}
+                'ref_request': {
                 }
+
+            },
+            {
+                'number': 0,
+                'status': HTTPStatus.BAD_REQUEST,
+                'body': {'err_msg': 'Invalid json'}
+            }
         ),
     ]
 )
-async def test_refresh_tokens(redis_client: Redis, make_get_request, query_data: dict, expected_answer: dict):
+async def test_refresh_tokens(
+    redis_client: Redis,
+    make_get_request,
+    query_data: dict,
+    expected_answer: dict
+):
     url = test_settings.service_url + '/api/v1/auth/refresh-tokens'
     # регистрация пользователя
     reg_body, reg_status = await make_get_request(

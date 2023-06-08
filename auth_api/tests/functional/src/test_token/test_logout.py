@@ -19,57 +19,62 @@ pytestmark = pytest.mark.asyncio
     [
         # проверка успешного логаута
         (
-                {
-                    'reg_request_body': {
-                        "login": "test_logout_1",
-                        "password": "test"
-                    },
-
+            {
+                'reg_request_body': {
+                    "login": "test_logout_1",
+                    "password": "test"
                 },
-                {
-                    'number': 0,
-                    'status': HTTPStatus.OK,
-                    'body': ''
-                }
+
+            },
+            {
+                'number': 0,
+                'status': HTTPStatus.OK,
+                'body': ''
+            }
         ),
         # проверка логаута с неправильным refresh
         (
-                {
-                    'reg_request_body': {
-                        "login": "test_logout_2",
-                        "password": "test"
-                    },
-                    'logout_request': {
-                        'refresh_token': "sesieorjer.serserser.serserser"
-                    }
-
+            {
+                'reg_request_body': {
+                    "login": "test_logout_2",
+                    "password": "test"
                 },
-                {
-                    'number': 0,
-                    'status': HTTPStatus.BAD_REQUEST,
-                    'body': {'err_msg': 'refresh is not valid'}
+                'logout_request': {
+                    'refresh_token': "sesieorjer.serserser.serserser"
                 }
+
+            },
+            {
+                'number': 0,
+                'status': HTTPStatus.BAD_REQUEST,
+                'body': {'err_msg': 'refresh is not valid'}
+            }
         ),
         # проверка логаута без refresh
         (
-                {
-                    'reg_request_body': {
-                        "login": "test_logout_9",
-                        "password": "test"
-                    },
-                    'logout_request': {
-                    }
-
+            {
+                'reg_request_body': {
+                    "login": "test_logout_9",
+                    "password": "test"
                 },
-                {
-                    'number': 0,
-                    'status': HTTPStatus.BAD_REQUEST,
-                    'body': {'err_msg': 'Invalid json'}
+                'logout_request': {
                 }
+
+            },
+            {
+                'number': 0,
+                'status': HTTPStatus.BAD_REQUEST,
+                'body': {'err_msg': 'Invalid json'}
+            }
         ),
     ]
 )
-async def test_logout(redis_client: Redis, make_get_request, query_data: dict, expected_answer: dict):
+async def test_logout(
+    redis_client: Redis,
+    make_get_request,
+    query_data: dict,
+    expected_answer: dict
+):
     url = test_settings.service_url + '/api/v1/auth/logout'
     # регистрация пользователя
     reg_body, reg_status = await make_get_request(
