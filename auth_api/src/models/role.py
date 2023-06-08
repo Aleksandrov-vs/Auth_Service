@@ -20,6 +20,12 @@ class Role(db.Model, RoleMixin):
         nullable=False)
     name = db.Column(db.String, unique=True, nullable=False)
     created = db.Column(db.DateTime, default=datetime.utcnow())
-    users = relationship('User', secondary=user_role_table, back_populates='roles', passive_deletes='all')
+    users = relationship(
+        'User',
+        secondary=user_role_table,
+        back_populates='roles',
+        passive_deletes='all'
+    )
+
     def __repr__(self):
         return f'<Role {self.id}:{self.name}>'

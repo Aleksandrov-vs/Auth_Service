@@ -3,7 +3,6 @@ import os
 import sys
 from http import HTTPStatus
 
-from redis.asyncio import Redis
 import pytest
 
 current = os.path.dirname(os.path.realpath(__file__))
@@ -19,103 +18,107 @@ pytestmark = pytest.mark.asyncio
     [
         # успешная смена пароля
         (
-                {
-                    'reg_request_body': {
-                        "login": "test_ch_p_1",
-                        "password": "test"
-                    },
-                    'ch_request_body': {
-                        "old_password": "test",
-                        "new_password": "new_test"
-                    },
+            {
+                'reg_request_body': {
+                    "login": "test_ch_p_1",
+                    "password": "test"
                 },
-                {
-                    'status': HTTPStatus.OK,
-                    'body': ''
-                }
+                'ch_request_body': {
+                    "old_password": "test",
+                    "new_password": "new_test"
+                },
+            },
+            {
+                'status': HTTPStatus.OK,
+                'body': ''
+            }
         ),
 
         # смена пароля с неправильным паролем
         (
-                {
-                    'reg_request_body': {
-                        "login": "test_ch_p_2",
-                        "password": "test"
-                    },
-                    'ch_request_body': {
-                        "old_password": "qwerty",
-                        "new_password": "new_test"
-                    },
-
+            {
+                'reg_request_body': {
+                    "login": "test_ch_p_2",
+                    "password": "test"
                 },
-                {
-                    'status': HTTPStatus.UNAUTHORIZED,
-                    'body': {"err_msg": "Old password is not valid."}
-                }
+                'ch_request_body': {
+                    "old_password": "qwerty",
+                    "new_password": "new_test"
+                },
+
+            },
+            {
+                'status': HTTPStatus.UNAUTHORIZED,
+                'body': {"err_msg": "Old password is not valid."}
+            }
         ),
         # смена пароля с неправильным access token
         (
-                {
-                    'reg_request_body': {
-                        "login": "test_ch_p_3",
-                        "password": "test"
-                    },
-                    'headers': {
-                        "Authorization": "Bearer eyJGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
-                                         ".eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY4NjE1NjYyMSwianRpIjoiZTE"
-                                         "xY2RlMTktY2IwZi00NmM2LTg0ZDQtOGZiMGM0ZmI4OTMxIiwidHlwZSI"
-                                         "6ImFjY2VzcyIsInN1YiI6IntcInJvbGVcIjogXCJjb25zdW1lclwiLCB"
-                                         "cInVzZXJfaWRcIjogXCIwOGNiNjFkOC1hZTYyLTRkMzAtYTQxZS0xYWE"
-                                         "yMTM4Y2Y3NTVcIn0iLCJuYmYiOjE2ODYxNTY2MjEsImV4cCI6MTY4NjE"
-                                         "2MzgyMX0.vTouV4vqvzRSilZMP5Mov7CHUJHiJ8S9k90JwJu72C4 "
-                    },
-                    'ch_request_body': {
-                        "old_password": "qwerty",
-                        "new_password": "new_test"
-                    },
-
+            {
+                'reg_request_body': {
+                    "login": "test_ch_p_3",
+                    "password": "test"
                 },
-                {
-                    'status': HTTPStatus.UNPROCESSABLE_ENTITY,
-                    'body': {"err_msg": "Old password is not valid."}
-                }
+                'headers': {
+                    "Authorization": "Bearer eyJGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+                                     ".eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY4NjE1NjYyMSwianRpIjoiZTE"
+                                     "xY2RlMTktY2IwZi00NmM2LTg0ZDQtOGZiMGM0ZmI4OTMxIiwidHlwZSI"
+                                     "6ImFjY2VzcyIsInN1YiI6IntcInJvbGVcIjogXCJjb25zdW1lclwiLCB"
+                                     "cInVzZXJfaWRcIjogXCIwOGNiNjFkOC1hZTYyLTRkMzAtYTQxZS0xYWE"
+                                     "yMTM4Y2Y3NTVcIn0iLCJuYmYiOjE2ODYxNTY2MjEsImV4cCI6MTY4NjE"
+                                     "2MzgyMX0.vTouV4vqvzRSilZMP5Mov7CHUJHiJ8S9k90JwJu72C4"
+                },
+                'ch_request_body': {
+                    "old_password": "qwerty",
+                    "new_password": "new_test"
+                },
+
+            },
+            {
+                'status': HTTPStatus.UNPROCESSABLE_ENTITY,
+                'body': {"err_msg": "Old password is not valid."}
+            }
         ),
         # смена пароля без старого пароля
         (
-                {
-                    'reg_request_body': {
-                        "login": "test_ch_p_4",
-                        "password": "test"
-                    },
-                    'ch_request_body': {
-                        "new_password": "new_test"
-                    },
-
+            {
+                'reg_request_body': {
+                    "login": "test_ch_p_4",
+                    "password": "test"
                 },
-                {
-                    'status': HTTPStatus.BAD_REQUEST,
-                    'body': {'err_msg': 'Invalid json'}
-                }
+                'ch_request_body': {
+                    "new_password": "new_test"
+                },
+
+            },
+            {
+                'status': HTTPStatus.BAD_REQUEST,
+                'body': {'err_msg': 'Invalid json'}
+            }
         ),
         # смена пароля без нового пароля
         (
-                {
-                    'reg_request_body': {
-                        "login": "test_ch_p_5",
-                        "password": "test"
-                    },
-                    'ch_request_body': {
-                        "old_password": "qwerty"
-                    }
+            {
+                'reg_request_body': {
+                    "login": "test_ch_p_5",
+                    "password": "test"
                 },
-                {
-                    'status': HTTPStatus.BAD_REQUEST,
-                    'body': {'err_msg': 'Invalid json'}
+                'ch_request_body': {
+                    "old_password": "qwerty"
                 }
+            },
+            {
+                'status': HTTPStatus.BAD_REQUEST,
+                'body': {'err_msg': 'Invalid json'}
+            }
         ),
     ]
 )
-async def test_change_password(make_get_request, query_data: dict, expected_answer: dict):
+async def test_change_password(
+    make_get_request,
+    query_data: dict,
+    expected_answer: dict
+):
     url = test_settings.service_url + '/api/v1/auth/change-password'
     # регистрация пользователя
     reg_body, reg_status = await make_get_request(

@@ -30,7 +30,8 @@ async def session_client():
 
 @pytest_asyncio.fixture(scope="session")
 async def redis_client():
-    client = Redis(host=test_settings.redis_host, port=test_settings.redis_port)
+    client = Redis(host=test_settings.redis_host,
+                   port=test_settings.redis_port)
     yield client
     await client.close()
 
@@ -42,25 +43,45 @@ def make_get_request(session_client: aiohttp.ClientSession):
             method: str = 'GET', data: dict = None, headers: dict = None):
 
         if method == 'GET':
-            async with session_client.get(url, params=params, headers=headers) as response:
+            async with session_client.get(
+                url,
+                params=params,
+                headers=headers
+            ) as response:
+
                 body = await response.json()
                 status = response.status
                 return body, status
 
         if method == 'POST':
-            async with session_client.post(url, json=data, headers=headers) as response:
+            async with session_client.post(
+                url,
+                json=data,
+                headers=headers
+            ) as response:
+
                 body = await response.json()
                 status = response.status
                 return body, status
 
         if method == 'DELETE':
-            async with session_client.delete(url, json=data, headers=headers) as response:
+            async with session_client.delete(
+                url,
+                json=data,
+                headers=headers
+            ) as response:
+
                 body = await response.json()
                 status = response.status
                 return body, status
 
         if method == 'PUT':
-            async with session_client.put(url, json=data, headers=headers) as response:
+            async with session_client.put(
+                url,
+                json=data,
+                headers=headers
+            ) as response:
+
                 body = await response.json()
                 status = response.status
                 return body, status

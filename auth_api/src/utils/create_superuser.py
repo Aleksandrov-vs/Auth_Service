@@ -1,19 +1,18 @@
 import datetime
-import os
-from src import db
 
-from src.models.user import User
-from src.models.role import Role
 import click
 from flask.cli import with_appcontext
-from flask_security.utils import hash_password
 
+from src import db
+from src.models.user import User
+from src.models.role import Role
 from src.utils.extensions import create_hash
 
 
 @click.command('create_superuser')
 @click.option('--login', prompt=True, help='Login for the superuser')
-@click.option('--password', prompt=True, hide_input=True, confirmation_prompt=True, help='Password for the superuser')
+@click.option('--password', prompt=True, hide_input=True,
+              confirmation_prompt=True, help='Password for the superuser')
 @with_appcontext
 def create_superuser(login, password):
     admin_role = Role.query.filter_by(name='admin').first()

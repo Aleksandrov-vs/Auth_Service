@@ -22,7 +22,9 @@ user: str = os.getenv('POSTGRES_USER')
 password: str = os.getenv("POSTGRES_PASSWORD")
 host: str = os.getenv('POSTGRES_HOST')
 port: int = int(os.getenv('POSTGRES_PORT'))
-config.set_main_option("sqlalchemy.url", f'postgresql://{user}:{password}@{host}:{port}/{dbname}')
+config.set_main_option(
+    "sqlalchemy.url", f'postgresql://{user}:{password}@{host}:{port}/{dbname}'
+)
 target_metadata = db.metadata
 
 

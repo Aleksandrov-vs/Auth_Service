@@ -1,5 +1,3 @@
-import logging
-
 from flask import Flask
 import redis
 from flask_jwt_extended import JWTManager
@@ -42,7 +40,7 @@ def create_app():
     app.register_blueprint(token)
     app.register_blueprint(role_bp)
 
-    #register command
+    # register command
     app.cli.add_command(create_superuser)
 
     # Database initialization

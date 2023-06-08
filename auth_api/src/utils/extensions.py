@@ -1,10 +1,8 @@
 import datetime
-import hashlib
 import logging
-from typing import Union, Tuple
+from typing import Union
 
 import bcrypt
-
 from flask_jwt_extended import (create_access_token,
                                 create_refresh_token)
 

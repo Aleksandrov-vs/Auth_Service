@@ -1,6 +1,4 @@
 import datetime
-import logging
-import uuid
 
 from redis import Redis
 from uuid import UUID
@@ -19,7 +17,9 @@ class TokenRepository:
         self._redis = redis_cli
         self._postgres_session = db_session
 
-    def _set(self, key: str, expire: Union[int, float, datetime.timedelta], value: Union[str, int]):
+    def _set(self, key: str,
+             expire: Union[int, float, datetime.timedelta],
+             value: Union[str, int]):
         self._redis.setex(key, expire, value)
 
     def _get(self, value):
@@ -49,7 +49,9 @@ class TokenRepository:
         user_id = self._get(refresh_token)
         return self.get_user_by_id(user_id)
 
-    def save_refresh_token(self, access_token: str, refresh_token: str, new_token_exp:  datetime.timedelta):
+    def save_refresh_token(self, access_token: str,
+                           refresh_token: str,
+                           new_token_exp:  datetime.timedelta):
         self._set(refresh_token, new_token_exp, access_token)
 
     def delete_refresh(self, refresh_for_del: str):
@@ -73,7 +75,8 @@ class TokenRepository:
     def save_new_user(self, login, pass_hash: bytes) -> UUID:
         consumer_role = Role.query.filter_by(name='consumer').first()
         if not consumer_role:
-            consumer_role = Role(name='consumer', created=datetime.datetime.now())
+            consumer_role = Role(name='consumer',
+                                 created=datetime.datetime.now())
         new_user = User(login=login, password=pass_hash)
         new_user.roles.append(consumer_role)
         self._postgres_session.add(new_user)
@@ -89,8 +92,13 @@ class TokenRepository:
         else:
             return None
 
-    def save_login_history(self, user_id: UUID, user_agent: str, auth_date: datetime.datetime):
-        new_login = AuthHistory(user_id=user_id, user_agent=user_agent, auth_date=auth_date)
+    def save_login_history(self, user_id: UUID,
+                           user_agent: str,
+                           auth_date: datetime.datetime):
+        new_login = AuthHistory(user_id=user_id,
+                                user_agent=user_agent,
+                                auth_date=auth_date)
+
         self._postgres_session.add(new_login)
         self._postgres_session.commit()
 

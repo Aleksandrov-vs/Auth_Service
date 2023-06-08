@@ -10,9 +10,11 @@ from functional.testdata.pg_data import ADMIN_USER, ADMIN_ROLE, ROLE_USER
 
 @pytest.fixture(scope='session')
 def pg_engine():
-    engine = create_engine(f"postgresql://{test_settings.pg_user}:"
-                           f"{test_settings.pg_password}@{test_settings.pg_host}"
-                           f":{test_settings.pg_port}/{test_settings.dbname}")
+    engine = create_engine(
+        f"postgresql://{test_settings.pg_user}:"
+        f"{test_settings.pg_password}@{test_settings.pg_host}"
+        f":{test_settings.pg_port}/{test_settings.dbname}"
+    )
     yield engine
 
 
@@ -45,7 +47,8 @@ async def admin_tokens(make_get_request, pg_engine: sqlalchemy.Engine):
     hashed_password = bcrypt.hashpw(test_user_password, salt)
     requests = [
         (
-            "INSERT INTO users(id, login, password) VALUES (:id, :login, :password);",
+            "INSERT INTO users(id, login, password) \
+                VALUES (:id, :login, :password);",
             {
                 "id": ADMIN_USER.get('id'),
                 "login": ADMIN_USER.get('login'),
@@ -60,7 +63,8 @@ async def admin_tokens(make_get_request, pg_engine: sqlalchemy.Engine):
             }
         ),
         (
-            "INSERT INTO user_role(id, user_id, role_id) VALUES (:id, :user_id, :role_id);",
+            "INSERT INTO user_role(id, user_id, role_id) \
+                VALUES (:id, :user_id, :role_id);",
             {
                 "id": ROLE_USER.get('id'),
                 "user_id": ROLE_USER.get('user_id'),
@@ -78,6 +82,9 @@ async def admin_tokens(make_get_request, pg_engine: sqlalchemy.Engine):
     reg_body, reg_status = await make_get_request(
         test_settings.service_url + '/api/v1/auth/login',
         method='POST',
-        data={'login': ADMIN_USER.get('login'), 'password': ADMIN_USER.get('password')}
+        data={
+            'login': ADMIN_USER.get('login'),
+            'password': ADMIN_USER.get('password')
+        }
     )
     yield reg_body

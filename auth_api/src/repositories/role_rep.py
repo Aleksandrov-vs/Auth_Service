@@ -46,7 +46,7 @@ class RoleRepository:
         roles = Role.query.all()
         if not roles:
             return {'message': 'No roles was found.'}
-        
+
         if len(roles) == 1:
             return {'role_id': roles[0].id, 'name': roles[0].name}
 
