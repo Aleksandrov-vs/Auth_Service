@@ -5,6 +5,7 @@ import sqlalchemy
 from sqlalchemy import create_engine, text
 
 from functional.settings import test_settings
+from functional.testdata.pg_data import ADMIN_USER, ADMIN_ROLE, ROLE_USER
 
 
 @pytest.fixture(scope='session')
@@ -39,26 +40,44 @@ def delete_all_pg_data(pg_engine: sqlalchemy.Engine):
 
 @pytest_asyncio.fixture(scope="session")
 async def admin_tokens(make_get_request, pg_engine: sqlalchemy.Engine):
-    test_user_login = 'test_admin'
-    test_user_password = 'test_admin'
     salt = bcrypt.gensalt()
-    test_user_password = test_user_password.encode('utf-8')
+    test_user_password = ADMIN_USER.get('password').encode('utf-8')
     hashed_password = bcrypt.hashpw(test_user_password, salt)
     requests = [
-        f"INSERT INTO users(id, login, password) VALUES ('8c459f2a-9427-42c9-9058-dc6b0abd220a', :login, :password);",
-        f"INSERT INTO roles(id, name) VALUES ('4c0b16c7-8095-4701-b80e-1cd10db6eac7', 'admin');",
-        f"INSERT INTO user_role(id, user_id, role_id) VALUES ('73734f1d-8861-46a7-9506-02ceb0713806', '8c459f2a-9427-42c9-9058-dc6b0abd220a', '4c0b16c7-8095-4701-b80e-1cd10db6eac7');"
+        (
+            "INSERT INTO users(id, login, password) VALUES (:id, :login, :password);",
+            {
+                "id": ADMIN_USER.get('id'),
+                "login": ADMIN_USER.get('login'),
+                "password": hashed_password
+            }
+        ),
+        (
+            "INSERT INTO roles(id, name) VALUES (:id, :name);",
+            {
+                "id": ADMIN_ROLE.get('id'),
+                "name":  ADMIN_ROLE.get('name')
+            }
+        ),
+        (
+            "INSERT INTO user_role(id, user_id, role_id) VALUES (:id, :user_id, :role_id);",
+            {
+                "id": ROLE_USER.get('id'),
+                "user_id": ROLE_USER.get('user_id'),
+                "role_id": ROLE_USER.get('role_id')
+            }
+        )
     ]
     with pg_engine.begin() as connection:
-        for query in requests:
+        for query, params in requests:
             connection.execute(
                 text(query),
-                {"login": test_user_login, "password": hashed_password}
+                params
             )
 
     reg_body, reg_status = await make_get_request(
         test_settings.service_url + '/api/v1/auth/login',
         method='POST',
-        data={'login': 'test_admin', 'password': 'test_admin'}
+        data={'login': ADMIN_USER.get('login'), 'password': ADMIN_USER.get('password')}
     )
     yield reg_body
