@@ -1,7 +1,10 @@
 import uuid
-from sqlalchemy import Table, Column, Integer, ForeignKey
-from .db import db
+
+from sqlalchemy import Table, Column, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
+
+from .db import db
+
 
 user_role_table = Table(
     'user_role',

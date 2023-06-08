@@ -6,7 +6,6 @@ from sqlalchemy.orm import relationship
 
 from .user_role import user_role_table
 from .db import db
-from .role import Role
 
 
 class User(db.Model, UserMixin):
