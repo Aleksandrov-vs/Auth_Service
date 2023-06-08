@@ -5,6 +5,9 @@ load_dotenv()
 
 
 class TestSettings(BaseSettings):
+    dbname: str = Field(..., env='POSTGRES_DB')
+    pg_user: str = Field(..., env='POSTGRES_USER')
+    pg_password: str = Field(..., env="POSTGRES_PASSWORD")
     pg_host: str = Field('localhost', env='POSTGRES_HOST')
     pg_port: int = Field(5432, env='POSTGRES_PORT')
 

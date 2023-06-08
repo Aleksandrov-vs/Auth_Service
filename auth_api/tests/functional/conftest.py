@@ -5,8 +5,35 @@ import aiohttp
 import pytest
 import pytest_asyncio
 from redis.asyncio import Redis
+from sqlalchemy import create_engine
 
 from functional.settings import test_settings
+
+
+@pytest.fixture(scope="function", autouse=True)
+def delete_all_pg_data():
+    def _delete(engine):
+        # define the tables to delete
+        table_names = [
+            "auth_history",
+            "user_role",
+            "roles",
+            "users",
+        ]
+
+        with engine.begin() as conn:
+            for table in table_names:
+                query = f"TRUNCATE {table} RESTART IDENTITY CASCADE;"
+                conn.execute(
+                    query
+                )
+
+    engine = create_engine(f"postgresql://{test_settings.pg_user}:{test_settings.pg_password}@{test_settings.pg_host}"
+                           f":{test_settings.pg_port}/{test_settings.dbname}")
+
+    _delete(engine)
+    yield
+    _delete(engine)
 
 
 @pytest.fixture(scope="session")
