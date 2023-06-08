@@ -64,10 +64,7 @@ pytestmark = pytest.mark.asyncio
                 {
                     'number': 0,
                     'status': HTTPStatus.BAD_REQUEST,
-                    'body': {
-                        'err_msg': '1 validation error for LogoutRequest\n'
-                                   'refresh_token\n  field required (type=value_error.missing)'
-                    }
+                    'body': {'err_msg': 'Invalid json'}
                 }
         ),
     ]

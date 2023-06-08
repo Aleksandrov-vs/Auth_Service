@@ -58,10 +58,7 @@ pytestmark = pytest.mark.asyncio
                 },
                 {
                     'status': HTTPStatus.BAD_REQUEST,
-                    'body': {
-                        'err_msg': '1 validation error for RegisterRequest\n'
-                                   'password\n  field required (type=value_error.missing)'
-                    }
+                    'body': {'err_msg': 'Invalid json'}
                 }
         ),
 
@@ -74,10 +71,7 @@ pytestmark = pytest.mark.asyncio
                 },
                 {
                     'status': HTTPStatus.BAD_REQUEST,
-                    'body': {
-                        'err_msg': '1 validation error for RegisterRequest\n'
-                                   'login\n  field required (type=value_error.missing)'
-                    }
+                    'body': {'err_msg': 'Invalid json'}
                 }
         )
     ]

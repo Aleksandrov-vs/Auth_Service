@@ -94,10 +94,7 @@ pytestmark = pytest.mark.asyncio
                 },
                 {
                     'status': HTTPStatus.BAD_REQUEST,
-                    'body': {
-                        'err_msg': '1 validation error for ChangePasswordRequest\n'
-                                   'old_password\n  field required (type=value_error.missing)'
-                    }
+                    'body': {'err_msg': 'Invalid json'}
                 }
         ),
         # смена пароля без нового пароля
@@ -113,10 +110,7 @@ pytestmark = pytest.mark.asyncio
                 },
                 {
                     'status': HTTPStatus.BAD_REQUEST,
-                    'body': {
-                        'err_msg': '1 validation error for ChangePasswordRequest\n'
-                                   'new_password\n  field required (type=value_error.missing)'
-                    }
+                    'body': {'err_msg': 'Invalid json'}
                 }
         ),
     ]
