@@ -1,17 +1,15 @@
-import json
-
-from flask import Blueprint, jsonify, request
-from src.services.user_service import get_user_service
-from src.repositories import user_rep
+from flask import Blueprint, jsonify
 from pydantic import BaseModel
-from flask_jwt_extended import jwt_required
+from src.repositories import user_rep
+from src.services.user_service import get_user_service
+
 from .utils import validator_json_request
 
 user_bp = Blueprint('user', __name__, url_prefix='/api/v1/auth')
 
 
 class RoleValidator(BaseModel):
-    role_id: str
+    role_name: str
 
 
 @user_bp.route('/users/<login>', methods=['GET'])
@@ -23,17 +21,19 @@ def get_user(login):
 
 @user_bp.route('/users/<user_id>/assign-role', methods=['POST'])
 @validator_json_request(RoleValidator)
-def assign_role(user_id):
+def assign_role(body: RoleValidator, user_id):
     user_service = get_user_service(user_rep.get_user_repository())
-    response = user_service.assign_role(user_id=user_id, **json.loads(request.data))
+    params = body.dict()
+    response = user_service.assign_role(user_id=user_id, **params)
     return jsonify(response)
 
 
 @user_bp.route('/users/<user_id>/revoke-role', methods=['POST'])
 @validator_json_request(RoleValidator)
-def revoke_role(user_id):
+def revoke_role(body: RoleValidator, user_id):
     user_service = get_user_service(user_rep.get_user_repository())
-    response = user_service.revoke_role(user_id=user_id, **json.loads(request.data))
+    params = body.dict()
+    response = user_service.revoke_role(user_id=user_id, **params)
     return jsonify(response)
 
 

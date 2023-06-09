@@ -20,10 +20,10 @@ class UserRepository:
             return {'user_id': user.id, 'login': user.login}
         return {'message': 'User not found.'}
 
-    def assign_role_to_user(self, user_id: str, role_id: str):
+    def assign_role_to_user(self, user_id: str, role_name: str):
         """Assign a role to a user using their IDs."""
         user = User.query.get(user_id)
-        role = Role.query.get(role_id)
+        role = Role.query.filter_by(name=role_name).first()
         if user and role:
             if role in user.roles:
                 return {'message': 'Role already assigned to user.'}
@@ -32,10 +32,10 @@ class UserRepository:
             return {'message': 'Role assigned to user successfully.'}
         return {'message': 'User or role not found.'}
 
-    def revoke_role_from_user(self, user_id: str, role_id: str):
+    def revoke_role_from_user(self, user_id: str, role_name: str):
         """Revoke a role from a user using their IDs."""
         user = User.query.get(user_id)
-        role = Role.query.get(role_id)
+        role = Role.query.filter_by(name=role_name).first()
         if user and role:
             if role in user.roles:
                 user.roles.remove(role)

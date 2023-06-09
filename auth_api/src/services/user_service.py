@@ -18,12 +18,12 @@ class UserService:
         role = self._repository.get_user_by_login(login)
         return role
 
-    def assign_role(self, user_id: UUID, role_id: UUID):
-        result = self._repository.assign_role_to_user(user_id, role_id)
+    def assign_role(self, user_id: UUID, role_name: str):
+        result = self._repository.assign_role_to_user(user_id, role_name)
         return result
 
-    def revoke_role(self, user_id: UUID, role_id: UUID):
-        role = self._repository.revoke_role_from_user(user_id, role_id)
+    def revoke_role(self, user_id: UUID, role_name: str):
+        role = self._repository.revoke_role_from_user(user_id, role_name)
         return role
 
     def viewing_role(self, user_id: UUID) -> list[str] | None:
