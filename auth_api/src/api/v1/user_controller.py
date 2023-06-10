@@ -1,4 +1,6 @@
-from flask import Blueprint, jsonify
+from http import HTTPStatus
+
+from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required
 from pydantic import BaseModel, constr
 
@@ -59,5 +61,18 @@ def check_role(user_id):
 @check_user_has_role('admin')
 def user_history(user_id):
     user_service = get_user_service(user_rep.get_user_repository())
-    history = user_service.user_history(user_id=user_id)
+
+    page_number = request.args.get('page_number', default=1, type=int)
+    page_size = request.args.get('page_size', default=50, type=int)
+
+    if not (100 > page_size > 0):
+        return jsonify({'err_msg': 'Page size is not valid'}), HTTPStatus.BAD_REQUEST
+    if not (100 > page_number > 0):
+        return jsonify({'err_msg': 'Page number is not valid'}), HTTPStatus.BAD_REQUEST
+
+    history = user_service.user_history(
+        user_id=user_id,
+        page_number=page_number,
+        page_size=page_size
+    )
     return jsonify(history)

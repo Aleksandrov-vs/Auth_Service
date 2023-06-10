@@ -12,6 +12,7 @@ from src.core.config import settings
 from src.models.db import db
 from src.models.utils import security
 from src.repositories import token_rep, role_rep, user_rep
+from src.utils.create_superuser import create_superuser
 
 
 def create_app():
@@ -47,5 +48,8 @@ def create_app():
     db.init_app(app)
     security.init_app(app)
     app.logger.info('Initialized database complete.')
+
+    # register command
+    app.cli.add_command(create_superuser)
 
     return app
