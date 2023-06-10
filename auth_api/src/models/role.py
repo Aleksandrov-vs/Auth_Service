@@ -18,7 +18,7 @@ class Role(db.Model, RoleMixin):
         default=uuid.uuid4,
         unique=True,
         nullable=False)
-    name = db.Column(db.String, unique=True, nullable=False)
+    name = db.Column(db.String(30), unique=True, nullable=False)
     created = db.Column(db.DateTime, default=datetime.utcnow())
     users = relationship(
         'User',

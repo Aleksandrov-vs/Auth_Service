@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify
 from flask_jwt_extended import jwt_required
-from pydantic import BaseModel
+from pydantic import BaseModel, constr
 
 from src.repositories import user_rep
 from src.services.user_service import get_user_service
@@ -11,7 +11,7 @@ user_bp = Blueprint('user', __name__, url_prefix='/api/v1/auth')
 
 
 class RoleValidator(BaseModel):
-    role_name: str
+    role_name: constr(max_length=30)
 
 
 @user_bp.route('/users/<login>', methods=['GET'])

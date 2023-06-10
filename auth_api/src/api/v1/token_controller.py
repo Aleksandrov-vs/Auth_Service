@@ -1,6 +1,8 @@
+from http import HTTPStatus
+
 from flask import Blueprint, jsonify, request, json
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from pydantic import BaseModel
+from pydantic import BaseModel,  constr
 
 from src.api.v1.utils import validator_json_request, request_has_user_agent
 from src.services.token_service import get_token_service
@@ -30,7 +32,7 @@ def change_password(body: ChangePasswordRequest):
 
 
 class LoginRequest(BaseModel):
-    login: str
+    login:  constr(max_length=50)
     password: str
 
 
@@ -38,9 +40,12 @@ class LoginRequest(BaseModel):
 @validator_json_request(LoginRequest)
 def login(body: LoginRequest):
     token_service = get_token_service(token_rep.get_token_repository())
+    user_agent = request.headers.get('User-Agent')
+    if len(user_agent) > 100:
+        return jsonify({'err_msg: Incorrect headers'}), HTTPStatus.BAD_REQUEST
     http_status, response_msg = token_service.login(body.login,
                                                     body.password,
-                                                    request.user_agent)
+                                                    user_agent)
     return jsonify(response_msg), http_status
 
 
@@ -71,7 +76,7 @@ def refresh_tokens(body: ReworkTokensRequest):
 
 
 class RegisterRequest(BaseModel):
-    login: str
+    login: constr(max_length=50)
     password: str
 
 
@@ -81,6 +86,8 @@ class RegisterRequest(BaseModel):
 def register(body: RegisterRequest):
     token_service = get_token_service(token_rep.get_token_repository())
     user_agent = request.headers.get('User-Agent')
+    if len(user_agent) > 100:
+        return jsonify({'err_msg: Incorrect headers'}), HTTPStatus.BAD_REQUEST
     http_status, response_msg = token_service.register(body.login,
                                                        body.password,
                                                        user_agent)
