@@ -38,5 +38,4 @@ def check_password(password_to_check: str, hash_pass_with_salt: bytes):
     logging.info(bcrypt.checkpw(password_to_check, hash_pass_with_salt))
     if bcrypt.checkpw(password_to_check, hash_pass_with_salt):
         return True
-    else:
-        return False
+    return False
