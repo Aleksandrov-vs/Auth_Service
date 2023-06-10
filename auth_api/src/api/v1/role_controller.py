@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify
 from flask_jwt_extended import jwt_required
-from pydantic import BaseModel
+from pydantic import BaseModel, constr
 
 from src.services.role_service import get_role_service
 from src.repositories import role_rep
@@ -11,12 +11,12 @@ role_bp = Blueprint('role', __name__, url_prefix='/api/v1/auth')
 
 
 class ValidatorJsonPostDelete(BaseModel):
-    name: str
+    name: constr(max_length=30)
 
 
 class ValidatorJsonUpdate(BaseModel):
     name: str
-    new_name: str
+    new_name: constr(max_length=30)
 
 
 @role_bp.route('/roles', methods=['POST'])

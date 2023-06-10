@@ -24,7 +24,7 @@ class AuthHistory(db.Model):
         ),
         nullable=False
     )
-    user_agent = db.Column(db.String)
+    user_agent = db.Column(db.String(100))
     auth_date = db.Column(db.DateTime, default=datetime.utcnow())
 
     def __repr__(self):

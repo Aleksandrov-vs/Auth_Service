@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-sleep 7
+while ! nc -z $POSTGRES_HOST $POSTGRES_PORT; do
+      sleep 0.1
+done
 
 alembic upgrade head
 

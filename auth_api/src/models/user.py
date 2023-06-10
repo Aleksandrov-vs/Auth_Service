@@ -17,7 +17,7 @@ class User(db.Model, UserMixin):
         default=uuid.uuid4,
         unique=True,
         nullable=False)
-    login = db.Column(db.String, unique=True, nullable=False)
+    login = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.LargeBinary, nullable=False)
     roles = relationship(
         "Role",

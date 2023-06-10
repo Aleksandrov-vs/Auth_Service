@@ -20,8 +20,8 @@ services:
       - API
     volumes:
       - ./redis/data:/data
-    ports:
-      - ${REDIS_PORT}:${REDIS_PORT}
+    expose:
+      - ${REDIS_PORT}
 
     healthcheck:
       test: [ "CMD", "redis-cli", "ping"]
@@ -39,8 +39,8 @@ services:
       - API
     volumes:
       - ./postgresql/data:/var/lib/postgresql/data
-    ports:
-      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    expose:
+      - ${POSTGRES_PORT}
 
 
   api:

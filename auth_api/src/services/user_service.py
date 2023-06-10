@@ -30,8 +30,17 @@ class UserService:
         role = self._repository.get_user_permissions(user_id=user_id)
         return role
 
-    def user_history(self, user_id: UUID) -> list[str] | None:
-        history = self._repository.get_user_history(user_id=user_id)
+    def user_history(
+            self,
+            user_id: UUID,
+            page_number: int,
+            page_size: int
+    ) -> list[str] | None:
+        history = self._repository.get_user_history(
+            user_id=user_id,
+            page_number=page_number,
+            page_size=page_size
+        )
         return history
 
 
