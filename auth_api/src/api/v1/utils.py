@@ -7,7 +7,10 @@ from flask_jwt_extended import get_jwt_identity
 from pydantic import BaseModel, ValidationError
 from flask import jsonify, request
 
+from src.utils.trace_func import tracer
 
+
+@tracer()
 def validator_json_request(validator_class: Type[BaseModel]):
     def decorator(func):
         @wraps(func)
@@ -30,6 +33,7 @@ def validator_json_request(validator_class: Type[BaseModel]):
     return decorator
 
 
+@tracer()
 def request_has_user_agent(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
@@ -42,6 +46,7 @@ def request_has_user_agent(func):
     return wrapper
 
 
+@tracer()
 def check_user_has_role(role_name: str):
     def decorator(func):
         @wraps(func)

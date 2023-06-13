@@ -4,6 +4,7 @@ from pydantic import BaseModel, constr
 
 from src.services.role_service import get_role_service
 from src.repositories import role_rep
+from src.utils.rate_limit import rate_limit
 from .utils import validator_json_request, check_user_has_role
 
 
@@ -20,6 +21,7 @@ class ValidatorJsonUpdate(BaseModel):
 
 
 @role_bp.route('/roles', methods=['POST'])
+@rate_limit()
 @jwt_required()
 @check_user_has_role('admin')
 @validator_json_request(ValidatorJsonPostDelete)
@@ -30,6 +32,7 @@ def role_create(body: ValidatorJsonPostDelete):
 
 
 @role_bp.route('/roles/delete', methods=['DELETE'])
+@rate_limit()
 @jwt_required()
 @check_user_has_role('admin')
 @validator_json_request(ValidatorJsonPostDelete)
@@ -40,6 +43,7 @@ def role_delete(body: ValidatorJsonPostDelete):
 
 
 @role_bp.route('/roles/update', methods=['PUT'])
+@rate_limit()
 @jwt_required()
 @check_user_has_role('admin')
 @validator_json_request(ValidatorJsonUpdate)
@@ -50,6 +54,7 @@ def role_update(body: ValidatorJsonUpdate):
 
 
 @role_bp.route('/roles/view', methods=['GET'])
+@rate_limit()
 @jwt_required()
 @check_user_has_role('admin')
 def roles_viewed():

@@ -4,7 +4,7 @@ import asyncio
 from opentelemetry import trace
 
 
-def traced(name: str = None):
+def tracer(name: str = None):
     def wrapper(func):
         if not asyncio.iscoroutinefunction(func):
             @wraps(func)
