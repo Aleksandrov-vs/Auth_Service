@@ -1,0 +1,4 @@
+192.168.208.1 - - [13/Jun/2023:11:26:11 +0000] "POST /api/v1/auth/register HTTP/1.1" 409 51 "-" "PostmanRuntime/7.32.2" "-""a7aff07c229079446ecc9465088699f1"
+192.168.240.1 - - [13/Jun/2023:11:32:46 +0000] "POST /api/v1/auth/register HTTP/1.1" 404 146 "-" "PostmanRuntime/7.32.2" "-" 5c343bccaa050ed4caa3b44b3ddaead1
+192.168.240.1 - - [13/Jun/2023:11:32:49 +0000] "POST /api/v1/auth/register HTTP/1.1" 404 146 "-" "PostmanRuntime/7.32.2" "-" e24bc614b5a5f82b646209db524aa1f1
+192.168.240.1 - - [13/Jun/2023:11:32:52 +0000] "POST /api/v1/auth/register HTTP/1.1" 409 51 "-" "PostmanRuntime/7.32.2" "-" e86722b8388ae00f10dd9211635f60ee
