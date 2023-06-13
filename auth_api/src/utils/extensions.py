@@ -5,6 +5,7 @@ from typing import Union
 import bcrypt
 from flask_jwt_extended import (create_access_token,
                                 create_refresh_token)
+from ua_parser import user_agent_parser
 
 
 def create_tokens(
@@ -39,3 +40,25 @@ def check_password(password_to_check: str, hash_pass_with_salt: bytes):
     if bcrypt.checkpw(password_to_check, hash_pass_with_salt):
         return True
     return False
+
+
+def parse_devices_type(user_agent: str) -> str:
+    parsed_user_agent = user_agent_parser.Parse(user_agent)
+
+    api_client_name_list = [
+        'api',
+        "postmanruntime",
+        "curl",
+        "python-requests",
+        "guzzlehttp",
+        "java"
+    ]
+
+    if 'mobile' in parsed_user_agent['device']['family'].lower():
+        return 'mobile'
+    elif 'smart' in parsed_user_agent['device']['family'].lower():
+        return 'smart'
+    elif parsed_user_agent['user_agent']['family'].lower() in api_client_name_list:
+        return 'api_client'
+    else:
+        return 'web'

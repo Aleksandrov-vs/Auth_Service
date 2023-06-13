@@ -10,6 +10,8 @@ from flask_sqlalchemy import session
 
 from typing import Union
 
+from src.utils.extensions import parse_devices_type
+
 
 class TokenRepository:
 
@@ -51,7 +53,7 @@ class TokenRepository:
 
     def save_refresh_token(self, access_token: str,
                            refresh_token: str,
-                           new_token_exp:  datetime.timedelta):
+                           new_token_exp: datetime.timedelta):
         self._set(refresh_token, new_token_exp, access_token)
 
     def delete_refresh(self, refresh_for_del: str):
@@ -92,12 +94,18 @@ class TokenRepository:
         else:
             return None
 
-    def save_login_history(self, user_id: UUID,
-                           user_agent: str,
-                           auth_date: datetime.datetime):
-        new_login = AuthHistory(user_id=user_id,
-                                user_agent=user_agent,
-                                auth_date=auth_date)
+    def save_login_history(
+            self, user_id: UUID,
+            user_agent: str,
+            auth_date: datetime.datetime
+    ):
+        device_type = parse_devices_type(user_agent)
+        new_login = AuthHistory(
+            user_id=user_id,
+            user_agent=user_agent,
+            auth_date=auth_date,
+            user_device_type=device_type
+        )
 
         self._postgres_session.add(new_login)
         self._postgres_session.commit()
@@ -111,7 +119,7 @@ class TokenRepository:
         return False
 
 
-token_repository: Union[TokenRepository,  None] = None
+token_repository: Union[TokenRepository, None] = None
 
 
 def get_token_repository():
