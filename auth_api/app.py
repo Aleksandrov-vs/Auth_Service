@@ -11,13 +11,12 @@ from src.utils.tracer_conf import configure_tracer
 load_dotenv()
 
 app = create_app()
-
+if settings.tracer_enabled:
+    configure_tracer()
 
 def main():
     app.run()
 
 
 if __name__ == '__main__':
-    if settings.tracer_enabled:
-        configure_tracer()
     main()

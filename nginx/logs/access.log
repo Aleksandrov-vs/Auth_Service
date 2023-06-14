@@ -13,3 +13,25 @@
 172.19.0.1 - - [14/Jun/2023:07:59:00 +0000] "POST /api/v1/auth/register HTTP/1.1" 409 51 "-" "PostmanRuntime/7.32.2" "-" 739b4a2526ce114ba95989c7f05960eb
 172.19.0.1 - - [14/Jun/2023:07:59:28 +0000] "GET /api/v1/auth/roles/view HTTP/1.1" 401 28 "-" "PostmanRuntime/7.32.2" "-" d2228e9428568e918f59184531f82437
 172.19.0.1 - - [14/Jun/2023:07:59:53 +0000] "GET /api/v1/auth/roles/view HTTP/1.1" 200 66 "-" "PostmanRuntime/7.32.2" "-" ba990f8e0a1323e341f17bd06d23bda8
+172.19.0.1 - - [14/Jun/2023:08:06:54 +0000] "GET /api/v1/auth/roles/view HTTP/1.1" 200 66 "-" "PostmanRuntime/7.32.2" "-" a567299449966f78c66f871b39c8ac07
+172.19.0.1 - - [14/Jun/2023:08:15:12 +0000] "GET /api/v1/auth/roles/view HTTP/1.1" 200 66 "-" "PostmanRuntime/7.32.2" "-" 4b52ef274ccba1c2ddbfe7db8d0a1bfe
+172.19.0.1 - - [14/Jun/2023:08:22:05 +0000] "GET /api/v1/auth/roles/view HTTP/1.1" 200 66 "-" "PostmanRuntime/7.32.2" "-" 665071d7f6f3526d8365ef88641fa565
+172.19.0.1 - - [14/Jun/2023:08:23:57 +0000] "GET /api/v1/auth/roles/view HTTP/1.1" 200 66 "-" "PostmanRuntime/7.32.2" "-" 8b862a67e83fd311155d9a98764ef6a0
+172.19.0.1 - - [14/Jun/2023:08:27:49 +0000] "GET /api/v1/auth/roles/view HTTP/1.1" 200 66 "-" "PostmanRuntime/7.32.2" "-" 4671c05c854e9fee26deec78cf1472e9
+172.19.0.1 - - [14/Jun/2023:08:29:48 +0000] "GET /api/v1/auth/roles/view HTTP/1.1" 200 66 "-" "PostmanRuntime/7.32.2" "-" cf8de631bf258c299bcf226768843d90
+172.19.0.1 - - [14/Jun/2023:08:38:17 +0000] "GET /api/v1/auth/roles/view HTTP/1.1" 200 66 "-" "PostmanRuntime/7.32.2" "-" d9b2a169b6c7fedf537b461cd6292e56
+172.19.0.1 - - [14/Jun/2023:08:40:16 +0000] "GET /api/v1/auth/roles/view HTTP/1.1" 200 66 "-" "PostmanRuntime/7.32.2" "-" 318e8dba429ee80e4594eb38c973710b
+172.19.0.1 - - [14/Jun/2023:08:43:33 +0000] "GET /api/v1/auth/roles/view HTTP/1.1" 200 66 "-" "PostmanRuntime/7.32.2" "-" 6eca32886f39c1a7881cec8696578a05
+172.19.0.1 - - [14/Jun/2023:08:48:56 +0000] "GET /api/v1/auth/roles/view HTTP/1.1" 200 66 "-" "PostmanRuntime/7.32.2" "-" 6d17a9e0b8bd1ca0ed8b9eed8c9db1cf
+172.19.0.1 - - [14/Jun/2023:08:50:42 +0000] "GET /api/v1/auth/roles/view HTTP/1.1" 200 66 "-" "PostmanRuntime/7.32.2" "-" 814a582a48ece774caffd6d0127786f2
+172.19.0.1 - - [14/Jun/2023:08:55:28 +0000] "GET /api/v1/auth/roles/view HTTP/1.1" 200 66 "-" "PostmanRuntime/7.32.2" "-" 3e54424b52ea692ff8a5524f1d1f1559
+172.19.0.1 - - [14/Jun/2023:09:05:48 +0000] "GET /api/v1/auth/roles/view HTTP/1.1" 200 66 "-" "PostmanRuntime/7.32.2" "-" 88b64ce78c2c3f9af2a26bdb4046eb6d
+172.19.0.1 - - [14/Jun/2023:09:52:51 +0000] "GET /api/v1/auth/roles/view HTTP/1.1" 200 66 "-" "PostmanRuntime/7.32.2" "-" ffa5daaca098aad5e3319278d82e487d
+172.19.0.1 - - [14/Jun/2023:09:58:36 +0000] "GET /api/v1/auth/roles/view HTTP/1.1" 200 66 "-" "PostmanRuntime/7.32.2" "-" cc7a78479680e2272211dd2241aabaf8
+172.19.0.1 - - [14/Jun/2023:10:10:04 +0000] "GET /api/v1/auth/roles/view HTTP/1.1" 401 28 "-" "PostmanRuntime/7.32.2" "-" 3bb50d1efb98311eb6abadf9dfa2991c
+172.19.0.1 - - [14/Jun/2023:10:10:17 +0000] "POST /api/v1/auth/login HTTP/1.1" 200 776 "-" "PostmanRuntime/7.32.2" "-" 168b5da1688b87e097d29d9ab79ea1d4
+172.22.0.1 - - [14/Jun/2023:10:18:25 +0000] "POST /api/v1/auth/login HTTP/1.1" 200 776 "-" "PostmanRuntime/7.32.2" "-" d45564790230110e7afdce84322b7069
+172.22.0.1 - - [14/Jun/2023:10:29:27 +0000] "GET /favicon.ico HTTP/1.1" 404 207 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 YaBrowser/23.5.1.714 Yowser/2.5 Safari/537.36" "-" b6a45ca8ec8eb779eb16c29f8217a160
+172.22.0.1 - - [14/Jun/2023:10:31:35 +0000] "POST /api/v1/auth/login HTTP/1.1" 200 776 "-" "PostmanRuntime/7.32.2" "-" dba3eab251685036b2ff43e69bfb1e0f
+172.22.0.1 - - [14/Jun/2023:10:37:49 +0000] "POST /api/v1/auth/login HTTP/1.1" 200 776 "-" "PostmanRuntime/7.32.2" "-" 9579982081921ab7ef12d1cba7ec61ab
+172.22.0.1 - - [14/Jun/2023:10:46:36 +0000] "POST /api/v1/auth/login HTTP/1.1" 200 776 "-" "PostmanRuntime/7.32.2" "-" 0501895cb0928923a82d71577f66c2b7

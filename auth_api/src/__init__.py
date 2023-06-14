@@ -61,17 +61,16 @@ def create_app():
 
     # Tracer configuration
     if settings.tracer_enabled:
-        FlaskInstrumentor().instrument_app(app, excluded_urls='/hello_world')
+        FlaskInstrumentor().instrument_app(app)
 
         @app.before_request
         def before_request():
             request_id = request.headers.get('X-Request-Id')
-
             if not request_id:
                 raise RuntimeError('request id is required')
 
-            tracer = trace.get_tracer(__name__)
-            with tracer.start_as_current_span('request-id-checking') as span:
+            tracer = trace.get_tracer(__name__, schema_url='http')
+            with tracer.start_span('auth') as span:
                 span.set_attribute('http.request_id', request_id)
 
     # Database initialization

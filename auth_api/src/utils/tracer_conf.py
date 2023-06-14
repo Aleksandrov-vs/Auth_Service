@@ -11,11 +11,7 @@ def configure_tracer() -> None:
     trace.set_tracer_provider(
         TracerProvider(
             resource=Resource.create(
-                attributes={
-                    "service.name": "auth-api",
-                    "service.namespace": "AuthApi",
-                    "service.version": "1.0.0",
-                }
+                attributes={'service.name': 'auth'}
             )
         )
     )
@@ -27,5 +23,7 @@ def configure_tracer() -> None:
             )
         )
     )
-    if settings.console_tracer_enabled:
-        trace.get_tracer_provider().add_span_processor(BatchSpanProcessor(ConsoleSpanExporter()))
+    # Чтобы видеть трейсы в консоли
+    trace.get_tracer_provider().add_span_processor(
+        BatchSpanProcessor(ConsoleSpanExporter())
+    )

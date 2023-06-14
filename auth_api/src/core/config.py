@@ -34,7 +34,6 @@ class Settings(BaseSettings):
     max_rate_penalty: int = Field(1800, env='MAX_RATE_PENALTY')
 
     tracer_enabled: bool = Field(True, env='TRACER_ENABLED')
-    console_tracer_enabled: bool = Field(False, env='CONSOLE_TRACING_ENABLED')
     tracer_host: str = Field('localhost', env='TRACER_HOST')
     tracer_port: int = Field(6831, env='TRACER_PORT')
 
