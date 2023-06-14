@@ -1,9 +1,12 @@
 import logging
 
 import redis
-from flask import Flask
+from flask import Flask, request
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
+from opentelemetry import trace
+from opentelemetry.instrumentation.flask import FlaskInstrumentor
+
 from src.api.v1.hello_controller import hello_bp
 from src.api.v1.role_controller import role_bp
 from src.api.v1.token_controller import token
@@ -27,6 +30,17 @@ def create_app():
                                             f"{settings.postgres.host}:{settings.postgres.port}/{settings.postgres.dbname}"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+    # app.config['OAUTH_CREDENTIALS'] = {
+    #     'YANDEX': {
+    #         'id': settings.yandex_id,
+    #         'secret': settings.yandex_secret,
+    #     },
+    #     'VK': {
+    #         'id': settings.vk_id,
+    #         'secret': settings.vk_secret,
+    #     }
+    # }
+
     jwt = JWTManager(app)
     bcrypt = Bcrypt(app)
 
@@ -44,6 +58,22 @@ def create_app():
     app.register_blueprint(token)
     app.register_blueprint(role_bp)
     app.register_blueprint(user_bp)
+
+    # Tracer configuration
+    if settings.tracer_enabled:
+        FlaskInstrumentor().instrument_app(app, excluded_urls='/hello_world')
+
+        @app.before_request
+        def before_request():
+            request_id = request.headers.get('X-Request-Id')
+
+            if not request_id:
+                raise RuntimeError('request id is required')
+
+            tracer = trace.get_tracer(__name__)
+            with tracer.start_as_current_span('request-id-checking') as span:
+                span.set_attribute('http.request_id', request_id)
+
     # Database initialization
     db.init_app(app)
     security.init_app(app)

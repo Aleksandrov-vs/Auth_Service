@@ -2,3 +2,14 @@
 192.168.240.1 - - [13/Jun/2023:11:32:46 +0000] "POST /api/v1/auth/register HTTP/1.1" 404 146 "-" "PostmanRuntime/7.32.2" "-" 5c343bccaa050ed4caa3b44b3ddaead1
 192.168.240.1 - - [13/Jun/2023:11:32:49 +0000] "POST /api/v1/auth/register HTTP/1.1" 404 146 "-" "PostmanRuntime/7.32.2" "-" e24bc614b5a5f82b646209db524aa1f1
 192.168.240.1 - - [13/Jun/2023:11:32:52 +0000] "POST /api/v1/auth/register HTTP/1.1" 409 51 "-" "PostmanRuntime/7.32.2" "-" e86722b8388ae00f10dd9211635f60ee
+172.19.0.1 - - [14/Jun/2023:07:33:57 +0000] "POST /api/v1/auth/register HTTP/1.1" 409 51 "-" "PostmanRuntime/7.32.2" "-" d89f40711eab12696e9c9c58e56f5129
+172.19.0.1 - - [14/Jun/2023:07:38:56 +0000] "POST /api/v1/auth/register HTTP/1.1" 409 51 "-" "PostmanRuntime/7.32.2" "-" 6000c3ec8871719408f7f085a89786b6
+172.19.0.1 - - [14/Jun/2023:07:42:45 +0000] "POST /api/v1/auth/register HTTP/1.1" 409 51 "-" "PostmanRuntime/7.32.2" "-" 02d93c0a08328bc078e9a2034c83def3
+172.19.0.1 - - [14/Jun/2023:07:43:59 +0000] "POST /api/v1/auth/register HTTP/1.1" 409 51 "-" "PostmanRuntime/7.32.2" "-" e0ffe836a367eaa207456d179e26cf0d
+172.19.0.1 - - [14/Jun/2023:07:44:13 +0000] "POST /api/v1/auth/register HTTP/1.1" 409 51 "-" "PostmanRuntime/7.32.2" "-" 3d51e0cf4ac77b27819ff1af731b2919
+172.19.0.1 - - [14/Jun/2023:07:55:44 +0000] "POST /api/v1/auth/login HTTP/1.1" 200 776 "-" "PostmanRuntime/7.32.2" "-" 0b64ff55032eaaa73ee0202c1e240305
+172.19.0.1 - - [14/Jun/2023:07:58:48 +0000] "POST /api/v1/auth/login HTTP/1.1" 200 776 "-" "PostmanRuntime/7.32.2" "-" ca7a3de04153189b51a94fe0d34f4ef4
+172.19.0.1 - - [14/Jun/2023:07:58:55 +0000] "POST /api/v1/auth/register HTTP/1.1" 409 51 "-" "PostmanRuntime/7.32.2" "-" 9ba5fa7b6a9ced13d89249c66a9d8fc8
+172.19.0.1 - - [14/Jun/2023:07:59:00 +0000] "POST /api/v1/auth/register HTTP/1.1" 409 51 "-" "PostmanRuntime/7.32.2" "-" 739b4a2526ce114ba95989c7f05960eb
+172.19.0.1 - - [14/Jun/2023:07:59:28 +0000] "GET /api/v1/auth/roles/view HTTP/1.1" 401 28 "-" "PostmanRuntime/7.32.2" "-" d2228e9428568e918f59184531f82437
+172.19.0.1 - - [14/Jun/2023:07:59:53 +0000] "GET /api/v1/auth/roles/view HTTP/1.1" 200 66 "-" "PostmanRuntime/7.32.2" "-" ba990f8e0a1323e341f17bd06d23bda8
