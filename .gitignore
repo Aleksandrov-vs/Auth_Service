@@ -139,10 +139,10 @@ dmypy.json
 cython_debug/
 
 # postgresql data folder
-/postgresql/data/*
+/auth_data/postgresql/data/*
 
 # elasticsearch data folder
 /elasticsearch/data/*
 
 # redis data folder
-/redis/data/*
+/auth_data/redis/data/*

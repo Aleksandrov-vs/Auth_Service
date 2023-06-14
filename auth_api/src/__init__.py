@@ -27,6 +27,7 @@ def create_app():
                                             f"{settings.postgres.host}:{settings.postgres.port}/{settings.postgres.dbname}"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+    logging.info(app.config["SQLALCHEMY_DATABASE_URI"])
     jwt = JWTManager(app)
     bcrypt = Bcrypt(app)
 

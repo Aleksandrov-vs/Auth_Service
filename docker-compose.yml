@@ -14,12 +14,12 @@ services:
 
   redis:
     image: redis
-    container_name: 'redis_cache'
+    container_name: 'redis_auth'
     restart: unless-stopped
     networks:
       - API
     volumes:
-      - ./redis/data:/data
+      - ./auth_data/redis/data:/data
     expose:
       - ${REDIS_PORT}
 
@@ -38,10 +38,9 @@ services:
     networks:
       - API
     volumes:
-      - ./postgresql/data:/var/lib/postgresql/data
-    expose:
-      - ${POSTGRES_PORT}
-
+      - ./auth_data/postgresql/data:/var/lib/postgresql/data
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
 
   api:
     build:
@@ -65,9 +64,99 @@ services:
       NGINX_ENVSUBST_TEMPLATE_SUFFIX: ".template"
       NGINX_SET_REAL_IP_FROM: 192.168.1.0/24
       API_PORT: ${API_PORT}
+      FAST_API_PORT: ${FAST_API_PORT}
     depends_on:
       - api
+      - fast_api
     networks:
       - API
     ports:
       - ${NGINX_PORT}:80
+
+  redis_async_api:
+    image: redis
+    container_name: 'redis_cache'
+    restart: unless-stopped
+    networks:
+      - API
+    volumes:
+      - ./async_api_data/redis/data:/data
+    expose:
+      - ${ASYNC_REDIS_PORT}
+
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  pg_async_api:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: ${ASYNC_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${ASYNC_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${ASYNC_POSTGRES_DB}
+    networks:
+      - API
+    volumes:
+      - ./async_api_data/postgresql/data:/var/lib/postgresql/data
+      - ./etl/dump:/docker-entrypoint-initdb.d
+    expose:
+      - ${ASYNC_POSTGRES_PORT}
+
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U app -d movies_database" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.7.0
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+#      - cluster.routing.allocation.disk.watermark.high=95%
+    networks:
+      - API
+    expose:
+      - ${ELASTICSEARCH_PORT}
+    volumes:
+      - ./async_api_data/elasticsearch/data:/usr/share/elasticsearch/data
+
+    healthcheck:
+      test: [ "CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  fast_api:
+    build:
+      context: async_api
+    env_file:
+      - .env
+    expose:
+      - ${FAST_API_PORT}
+    networks:
+      - API
+    depends_on:
+      redis_async_api:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+
+  etl:
+    build:
+      context: etl/postgres_to_es
+    env_file:
+      - .env
+    networks:
+      - API
+    environment:
+      - PYTHONPATH=/opt/
+    depends_on:
+      pg_async_api:
+        condition: service_healthy
+      redis_async_api:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
