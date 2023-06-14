@@ -50,4 +50,3 @@ opentelemetry-api==1.18.0
 opentelemetry-sdk==1.18.0
 opentelemetry-instrumentation-flask==0.39b0
 opentelemetry-exporter-jaeger==1.18.0
-flask_opentracing==1.1.0

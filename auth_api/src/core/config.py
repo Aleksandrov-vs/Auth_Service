@@ -30,8 +30,6 @@ class Settings(BaseSettings):
     redis: RedisSettings = RedisSettings()
 
     default_rate_limit: int = Field(10, env='DEFAULT_RATE_LIMIT')
-    default_rate_period: int = Field(60, env='DEFAULT_RATE_PERIOD')
-    max_rate_penalty: int = Field(1800, env='MAX_RATE_PENALTY')
 
     tracer_enabled: bool = Field(True, env='TRACER_ENABLED')
     tracer_host: str = Field('localhost', env='TRACER_HOST')

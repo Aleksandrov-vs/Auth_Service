@@ -70,7 +70,7 @@ def create_app():
                 raise RuntimeError('request id is required')
 
             tracer = trace.get_tracer(__name__, schema_url='http')
-            with tracer.start_span('auth') as span:
+            with tracer.start_as_current_span('auth') as span:
                 span.set_attribute('http.request_id', request_id)
 
     # Database initialization
