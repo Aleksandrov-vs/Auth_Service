@@ -1,3 +1,4 @@
+import logging
 from http import HTTPStatus
 
 from flask import Blueprint, jsonify, request, json
@@ -47,6 +48,13 @@ def login(body: LoginRequest):
                                                     body.password,
                                                     user_agent)
     return jsonify(response_msg), http_status
+
+
+@token.route('/is_authenticated',  methods=["GET"])
+@jwt_required()
+def is_authenticated():
+    response_msg = {"msg": "ok"}
+    return jsonify(response_msg), HTTPStatus.OK
 
 
 class LogoutRequest(BaseModel):

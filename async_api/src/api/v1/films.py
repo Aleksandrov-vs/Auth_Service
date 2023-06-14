@@ -1,10 +1,11 @@
 from http import HTTPStatus
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 
 from services.film import FilmService, get_film_service
 from core.messages import FILM_NOT_FOUND, TOTAL_FILM_NOT_FOUND
+from utils.extensions import is_authenticated
 from .response_models import FilmSearch, Film
 from .utils import PaginateQueryParams
 
@@ -36,7 +37,9 @@ async def film_search(
 
 
 @router.get('/{film_id}', response_model=Film)
+@is_authenticated
 async def film_details(
+        request: Request,
         film_id: str = Query(
             '025c58cd-1b7e-43be-9ffb-8571a613579b',
             description="UUID фильма"

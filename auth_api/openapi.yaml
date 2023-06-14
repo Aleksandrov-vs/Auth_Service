@@ -43,6 +43,18 @@ paths:
         '401':
           description: Неверные учетные данные
 
+  /api/v1/auth/is_authenticated:
+    post:
+      tags:
+            - Tokens
+      summary: проверка авторизации
+      requestBody:
+      responses:
+        '200':
+          description: Успешный проверка
+        '401':
+          description: Не авторизован
+
   /api/v1/auth/refresh-tokens:
     post:
       tags:

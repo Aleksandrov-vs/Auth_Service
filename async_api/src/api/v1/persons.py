@@ -1,10 +1,11 @@
 from http import HTTPStatus
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 
 from services.person import PersonService, get_person_service
 from core.messages import TOTAL_PERSON_NOT_FOUND, PERSON_NOT_FOUND, PERSONS_FILMS_NOT_FOUND
+from utils.extensions import is_authenticated
 from .response_models import PersonFilm, ResponsePerson
 from .utils import PaginateQueryParams
 
@@ -32,7 +33,9 @@ async def person_films(
 
 
 @router.get('/{person_id}', response_model=ResponsePerson)
+@is_authenticated
 async def detail_person(
+        request: Request,
         person_id: UUID = Query(
             'a5a8f573-3cee-4ccc-8a2b-91cb9f55250a',
             description='UUID персоны'

@@ -16,5 +16,7 @@ class Settings(BaseSettings):
     elastic_port: int = Field(9200, env='ELASTICSEARCH_PORT')
     base_dir: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+    auth_server_url = Field('http://api/api/v1/auth', env='AUTH_URL')
+
 
 settings = Settings()
