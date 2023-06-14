@@ -41,8 +41,8 @@ class LoginRequest(BaseModel):
 def login(body: LoginRequest):
     token_service = get_token_service(token_rep.get_token_repository())
     user_agent = request.headers.get('User-Agent')
-    if len(user_agent) > 100:
-        return jsonify({'err_msg: Incorrect headers'}), HTTPStatus.BAD_REQUEST
+    if len(user_agent) > 300:
+        return jsonify({'err_msg': 'Incorrect headers'}), HTTPStatus.BAD_REQUEST
     http_status, response_msg = token_service.login(body.login,
                                                     body.password,
                                                     user_agent)
@@ -86,8 +86,8 @@ class RegisterRequest(BaseModel):
 def register(body: RegisterRequest):
     token_service = get_token_service(token_rep.get_token_repository())
     user_agent = request.headers.get('User-Agent')
-    if len(user_agent) > 100:
-        return jsonify({'err_msg: Incorrect headers'}), HTTPStatus.BAD_REQUEST
+    if len(user_agent) > 300:
+        return jsonify({'err_msg': 'Incorrect headers'}), HTTPStatus.BAD_REQUEST
     http_status, response_msg = token_service.register(body.login,
                                                        body.password,
                                                        user_agent)
