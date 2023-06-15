@@ -14,6 +14,7 @@ app = create_app()
 if settings.tracer_enabled:
     configure_tracer()
 
+
 def main():
     app.run()
 
