@@ -23,11 +23,26 @@ class RedisSettings(BaseSettings):
     port: int = Field(6379, env='REDIS_PORT')
 
 
+class YandexOAuthSettings(BaseSettings):
+    name: str = 'yandex'
+    client_id: str = Field(..., env="YANDEX_ID")
+    client_secret: str = Field(..., env="YANDEX_SECRET")
+    authorize_url: str = Field(..., env="YANDEX_AUTHORIZE_URL")
+    access_token_url: str = 'https://oauth.yandex.com/token'
+    api_base_url: str = 'https://login.yandex.ru/info'
+    client_kwargs: dict = {'scope': 'openid email profile'}
+
+
+class OAuthSettings(BaseSettings):
+    yandex: YandexOAuthSettings = YandexOAuthSettings()
+
+
 class Settings(BaseSettings):
     secret_key: str = Field(..., env='SECRET_KEY')
     debug: bool = Field(..., env='DEBUG')
     postgres: PostgresSettings = PostgresSettings()
     redis: RedisSettings = RedisSettings()
+    oauth = OAuthSettings = OAuthSettings()
 
 
 settings = Settings()
