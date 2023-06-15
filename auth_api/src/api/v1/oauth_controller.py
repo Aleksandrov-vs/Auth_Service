@@ -1,3 +1,4 @@
+import logging
 from http import HTTPStatus
 
 from flask import Blueprint, jsonify, request, json, redirect, url_for
@@ -16,7 +17,7 @@ create_service(settings.oauth.yandex.dict())
 
 @oauth_bp.route('/login')
 def login():
-    redirect_uri = url_for('authorize', _external=True)
+    redirect_uri = url_for('oauth.authorize', _external=True)
     return oauth.yandex.authorize_redirect(redirect_uri)
 
 @oauth_bp.route('/authorize')

@@ -29,8 +29,9 @@ class YandexOAuthSettings(BaseSettings):
     client_secret: str = Field(..., env="YANDEX_SECRET")
     authorize_url: str = Field(..., env="YANDEX_AUTHORIZE_URL")
     access_token_url: str = 'https://oauth.yandex.com/token'
-    api_base_url: str = 'https://login.yandex.ru/info'
-    client_kwargs: dict = {'scope': 'openid email profile'}
+    response_type: str = 'code'
+    display: str = 'popup'
+    scope: str = 'login:info'
 
 
 class OAuthSettings(BaseSettings):
