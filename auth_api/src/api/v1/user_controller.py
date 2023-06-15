@@ -72,9 +72,11 @@ def user_history(user_id):
     page_size = request.args.get('page_size', default=50, type=int)
 
     if not (100 > page_size > 0):
-        return jsonify({'err_msg': 'Page size is not valid'}), HTTPStatus.BAD_REQUEST
+        return jsonify({'err_msg': 'Page size is not valid'}),\
+               HTTPStatus.BAD_REQUEST
     if not (100 > page_number > 0):
-        return jsonify({'err_msg': 'Page number is not valid'}), HTTPStatus.BAD_REQUEST
+        return jsonify({'err_msg': 'Page number is not valid'}),\
+               HTTPStatus.BAD_REQUEST
 
     history = user_service.user_history(
         user_id=user_id,

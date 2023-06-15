@@ -13,13 +13,16 @@ def create_partition(target, connection, **kw) -> None:
     """ creating partition by auth_history_in """
     logging.info('создание таблиц ура ура ура'*10)
     connection.execute(
-        """CREATE TABLE IF NOT EXISTS "auth_history_in_smart" PARTITION OF "auth_history" FOR VALUES IN ('smart')"""
+        """CREATE TABLE IF NOT EXISTS "auth_history_in_smart"
+        PARTITION OF "auth_history" FOR VALUES IN ('smart')"""
     )
     connection.execute(
-        """CREATE TABLE IF NOT EXISTS "auth_history_in_mobile" PARTITION OF "auth_history" FOR VALUES IN ('mobile')"""
+        """CREATE TABLE IF NOT EXISTS "auth_history_in_mobile"
+        PARTITION OF "auth_history" FOR VALUES IN ('mobile')"""
     )
     connection.execute(
-        """CREATE TABLE IF NOT EXISTS "auth_history_in_web" PARTITION OF "auth_history" FOR VALUES IN ('web')"""
+        """CREATE TABLE IF NOT EXISTS "auth_history_in_web"
+        PARTITION OF "auth_history" FOR VALUES IN ('web')"""
     )
     connection.execute(
         """

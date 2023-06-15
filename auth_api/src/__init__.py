@@ -42,7 +42,8 @@ def create_app():
     bcrypt = Bcrypt(app)
 
     redis_db = redis.Redis(host=settings.redis.host, port=settings.redis.port)
-    token_rep.token_repository = token_rep.TokenRepository(redis_db, db.session)
+    token_rep.token_repository = token_rep.TokenRepository(redis_db,
+                                                           db.session)
     logging.info(f'token repository is: {token_rep.token_repository}')
 
     role_rep.role_repository = role_rep.RoleRepository(db.session)
