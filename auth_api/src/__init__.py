@@ -16,6 +16,7 @@ from src.models.db import db
 from src.models.utils import security
 from src.repositories import token_rep, role_rep, user_rep
 from src.utils.create_superuser import create_superuser
+from src.swagger.swagger import swagger_ui_blueprint, SWAGGER_URL
 
 
 def create_app():
@@ -58,6 +59,8 @@ def create_app():
     app.register_blueprint(token)
     app.register_blueprint(role_bp)
     app.register_blueprint(user_bp)
+
+    app.register_blueprint(swagger_ui_blueprint, url_prefix=SWAGGER_URL)
 
     # Tracer configuration
     if settings.tracer_enabled:

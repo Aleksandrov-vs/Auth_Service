@@ -78,3 +78,10 @@
 ```bash
     docker-compose up --build
 ```
+
+# интеграция  Auth-сервиса и AsyncAPI-сервиса. 
+Ограничили доступ к двум эндпоинтам (`/api/v1/persons/{person_id}` и `/api/v1/films/{film_id}`) для неавторизованных пользователей.
+Декоратор находится в  `async_api/src/utils/extensions.py`
+
+# Swagger UI 
+Можно посмотреть по url: `/api/v1/auth/openapi/`
