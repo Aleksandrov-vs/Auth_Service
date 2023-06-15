@@ -8,8 +8,10 @@ from src.api.v1.hello_controller import hello_bp
 from src.api.v1.role_controller import role_bp
 from src.api.v1.token_controller import token
 from src.api.v1.user_controller import user_bp
+from src.api.v1.oauth_controller import oauth_bp
 from src.core.config import settings
 from src.models.db import db
+from src.repositories.oauth import oauth
 from src.models.utils import security
 from src.repositories import token_rep, role_rep, user_rep
 from src.utils.create_superuser import create_superuser
@@ -43,9 +45,11 @@ def create_app():
     app.register_blueprint(hello_bp)
     app.register_blueprint(token)
     app.register_blueprint(role_bp)
+    app.register_blueprint(oauth_bp)
     app.register_blueprint(user_bp)
     # Database initialization
     db.init_app(app)
+    oauth.init_app(app)
     security.init_app(app)
     app.logger.info('Initialized database complete.')
 
