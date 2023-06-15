@@ -35,10 +35,6 @@ def create_app():
     #     'YANDEX': {
     #         'id': settings.yandex_id,
     #         'secret': settings.yandex_secret,
-    #     },
-    #     'VK': {
-    #         'id': settings.vk_id,
-    #         'secret': settings.vk_secret,
     #     }
     # }
 

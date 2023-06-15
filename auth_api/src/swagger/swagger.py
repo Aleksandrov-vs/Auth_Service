@@ -23,5 +23,4 @@ swagger_ui_blueprint = get_swaggerui_blueprint(
 def send_api_spec():
     current_directory = os.getcwd()
     swagger_directory = os.path.join(current_directory, 'src', 'swagger')
-    logging.info(swagger_directory)
     return send_from_directory(swagger_directory, 'openapi.yaml')
