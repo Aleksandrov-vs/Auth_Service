@@ -20,6 +20,10 @@ server {
         proxy_pass http://api:${API_PORT};
     }
 
+    location /api/v1/oauth/ {
+        proxy_pass http://api:${API_PORT};
+    }
+
     location / {
         proxy_pass http://fast_api:${FAST_API_PORT};
     }
