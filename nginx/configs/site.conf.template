@@ -15,8 +15,13 @@ server {
     access_log /etc/nginx/logs/access.log main;
     access_log /dev/stdout main;
 
-    location / {
+
+    location /api/v1/auth/ {
         proxy_pass http://api:${API_PORT};
+    }
+
+    location / {
+        proxy_pass http://fast_api:${FAST_API_PORT};
     }
 
     error_page  404              /404.html;

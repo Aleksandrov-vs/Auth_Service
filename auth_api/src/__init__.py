@@ -18,6 +18,7 @@ from src.repositories.oauth import oauth
 from src.models.utils import security
 from src.repositories import token_rep, role_rep, user_rep, oauth_rep
 from src.utils.create_superuser import create_superuser
+from src.swagger.swagger import swagger_ui_blueprint, SWAGGER_URL
 
 
 def create_app():
@@ -36,10 +37,6 @@ def create_app():
     #     'YANDEX': {
     #         'id': settings.yandex_id,
     #         'secret': settings.yandex_secret,
-    #     },
-    #     'VK': {
-    #         'id': settings.vk_id,
-    #         'secret': settings.vk_secret,
     #     }
     # }
 
@@ -47,7 +44,8 @@ def create_app():
     bcrypt = Bcrypt(app)
 
     redis_db = redis.Redis(host=settings.redis.host, port=settings.redis.port)
-    token_rep.token_repository = token_rep.TokenRepository(redis_db, db.session)
+    token_rep.token_repository = token_rep.TokenRepository(redis_db,
+                                                           db.session)
     logging.info(f'token repository is: {token_rep.token_repository}')
 
     role_rep.role_repository = role_rep.RoleRepository(db.session)
@@ -64,6 +62,8 @@ def create_app():
     app.register_blueprint(role_bp)
     app.register_blueprint(oauth_bp)
     app.register_blueprint(user_bp)
+
+    app.register_blueprint(swagger_ui_blueprint, url_prefix=SWAGGER_URL)
 
     # Tracer configuration
     if settings.tracer_enabled:

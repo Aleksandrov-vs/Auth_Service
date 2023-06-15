@@ -8,9 +8,10 @@ def traced(name: str = None):
         @wraps(func)
         def wrapper(*args, **kwargs):
             tracer = trace.get_tracer(__name__)
-            with tracer.start_as_current_span(func.__name__ if not name else name):
+            with tracer.start_as_current_span(
+                    func.__name__ if not name else name
+            ):
                 return func(*args, **kwargs)
 
         return wrapper
     return decorator
-

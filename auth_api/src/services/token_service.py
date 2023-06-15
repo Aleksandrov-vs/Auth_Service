@@ -95,7 +95,9 @@ class TokenServices:
 
             return HTTPStatus.BAD_REQUEST, 'refresh token is not valid'
 
-        return HTTPStatus.BAD_REQUEST, {'err_msg': 'refresh token is not exist'}
+        return HTTPStatus.BAD_REQUEST, {
+            'err_msg': 'refresh token is not exist'
+        }
 
     def register(self, login: str,
                  password: str,

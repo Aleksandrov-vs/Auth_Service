@@ -53,10 +53,14 @@ class UserRepository:
             permissions = set()
             for role in user.roles:
                 permissions.add(role.name)
-            return {'user_id': user.id, 'login': user.login, 'permissions': list(permissions)}
+            return {
+                'user_id': user.id, 'login': user.login,
+                'permissions': list(permissions)
+            }
         return {'message': 'User not found.'}
 
-    def get_user_history(self, user_id: UUID, page_number: int, page_size: int):
+    def get_user_history(self, user_id: UUID,
+                         page_number: int, page_size: int):
         """Get all user's of a user auth by their ID."""
         history = AuthHistory.query.filter_by(user_id=user_id).paginate(
             page=page_number,
@@ -64,8 +68,12 @@ class UserRepository:
             error_out=False
         )
         if history:
-            return [{'user_id': row.user_id, 'user_agent': row.user_agent, 'auth_date': row.auth_date}
-                    for row in history]
+            return [
+                {
+                    'user_id': row.user_id,
+                    'user_agent': row.user_agent,
+                    'auth_date': row.auth_date
+                } for row in history]
         return {'message': 'User history is not found'}
 
 
