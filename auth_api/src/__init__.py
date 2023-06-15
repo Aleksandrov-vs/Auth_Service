@@ -16,7 +16,7 @@ from src.core.config import settings
 from src.models.db import db
 from src.repositories.oauth import oauth
 from src.models.utils import security
-from src.repositories import token_rep, role_rep, user_rep
+from src.repositories import token_rep, role_rep, user_rep, oauth_rep
 from src.utils.create_superuser import create_superuser
 
 
@@ -55,6 +55,9 @@ def create_app():
 
     user_rep.user_repository = user_rep.UserRepository(db.session)
     logging.info(f'role repository is: {role_rep.role_repository}')
+
+    oauth_rep.oauth_repository = oauth_rep.OAuthRepository(db.session)
+    logging.info(f'oauth repository is: {role_rep.role_repository}')
 
     app.register_blueprint(hello_bp)
     app.register_blueprint(token)

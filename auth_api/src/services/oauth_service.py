@@ -23,7 +23,7 @@ class OAuthService:
     def login_or_create_social(self, social_id: str, login: str, user_agent: str):
         """ Создание пользователя из социальных сетей. """
         if not self._oauth_repository.social_is_exist(social_id):
-            password = uuid.uuid4()
+            password = str(uuid.uuid4())
             user_id = self._token_repository.save_new_user(login, create_hash(password))
             logging.info(f'User is created {user_id}')
             social_user_id = self._oauth_repository.create_new_social(user_id, social_id, login)
@@ -40,11 +40,11 @@ class OAuthService:
             access_expires_delta=access_exp,
             refresh_expires_delta=refresh_exp
         )
-        self._repository.save_refresh_token(access_token,
+        self._token_repository.save_refresh_token(access_token,
                                             refresh_token,
                                             refresh_exp)
 
-        self._repository.save_login_history(user_id,
+        self._token_repository.save_login_history(user.id,
                                             str(user_agent),
                                             datetime.datetime.now())
         return HTTPStatus.OK, {
