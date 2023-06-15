@@ -58,7 +58,8 @@ def parse_devices_type(user_agent: str) -> str:
         return 'mobile'
     elif 'smart' in parsed_user_agent['device']['family'].lower():
         return 'smart'
-    elif parsed_user_agent['user_agent']['family'].lower() in api_client_name_list:
+    elif parsed_user_agent['user_agent']['family'].lower() \
+            in api_client_name_list:
         return 'api_client'
     else:
         return 'web'

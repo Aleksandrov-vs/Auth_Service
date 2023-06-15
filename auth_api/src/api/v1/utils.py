@@ -1,5 +1,4 @@
 import json
-import logging
 from typing import Type
 from functools import wraps
 from http import HTTPStatus
