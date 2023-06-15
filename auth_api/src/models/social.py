@@ -7,7 +7,7 @@ from .user import User
 
 
 class SocialUser(db.Model):
-    __tablename__ = 'SocialRoles'
+    __tablename__ = 'social_user'
 
     id = db.Column(
         UUID(as_uuid=True),
