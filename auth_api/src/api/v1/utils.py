@@ -1,4 +1,5 @@
 import json
+import logging
 from typing import Type
 from functools import wraps
 from http import HTTPStatus
@@ -24,7 +25,6 @@ def validator_json_request(validator_class: Type[BaseModel]):
             except (ValidationError, TypeError):
                 return jsonify(
                     {'err_msg': 'Invalid json'}), HTTPStatus.BAD_REQUEST
-
             return res
         return wrapper
     return decorator

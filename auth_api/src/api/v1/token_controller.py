@@ -7,6 +7,7 @@ from pydantic import BaseModel,  constr
 from src.api.v1.utils import validator_json_request, request_has_user_agent
 from src.services.token_service import get_token_service
 from src.repositories import token_rep
+from src.utils.rate_limit import rate_limit
 
 
 token = Blueprint('token', __name__, url_prefix='/api/v1/auth')
@@ -18,6 +19,7 @@ class ChangePasswordRequest(BaseModel):
 
 
 @token.route('/change-password', methods=["POST"])
+@rate_limit()
 @jwt_required()
 @validator_json_request(ChangePasswordRequest)
 def change_password(body: ChangePasswordRequest):
@@ -37,12 +39,13 @@ class LoginRequest(BaseModel):
 
 
 @token.route('/login',  methods=["POST"])
+@rate_limit()
 @validator_json_request(LoginRequest)
 def login(body: LoginRequest):
     token_service = get_token_service(token_rep.get_token_repository())
     user_agent = request.headers.get('User-Agent')
-    if len(user_agent) > 100:
-        return jsonify({'err_msg: Incorrect headers'}), HTTPStatus.BAD_REQUEST
+    if len(user_agent) > 300:
+        return jsonify({'err_msg': 'Incorrect headers'}), HTTPStatus.BAD_REQUEST
     http_status, response_msg = token_service.login(body.login,
                                                     body.password,
                                                     user_agent)
@@ -54,6 +57,7 @@ class LogoutRequest(BaseModel):
 
 
 @token.route('/logout',  methods=["POST"])
+@rate_limit()
 @validator_json_request(LogoutRequest)
 def logout(body: LogoutRequest):
     token_service = get_token_service(token_rep.get_token_repository())
@@ -66,6 +70,7 @@ class ReworkTokensRequest(BaseModel):
 
 
 @token.route('/refresh-tokens', methods=["POST"])
+@rate_limit()
 @validator_json_request(ReworkTokensRequest)
 def refresh_tokens(body: ReworkTokensRequest):
     token_service = get_token_service(token_rep.get_token_repository())
@@ -81,13 +86,14 @@ class RegisterRequest(BaseModel):
 
 
 @token.route('/register', methods=["POST"])
+@rate_limit()
 @validator_json_request(RegisterRequest)
 @request_has_user_agent
 def register(body: RegisterRequest):
     token_service = get_token_service(token_rep.get_token_repository())
     user_agent = request.headers.get('User-Agent')
-    if len(user_agent) > 100:
-        return jsonify({'err_msg: Incorrect headers'}), HTTPStatus.BAD_REQUEST
+    if len(user_agent) > 300:
+        return jsonify({'err_msg': 'Incorrect headers'}), HTTPStatus.BAD_REQUEST
     http_status, response_msg = token_service.register(body.login,
                                                        body.password,
                                                        user_agent)

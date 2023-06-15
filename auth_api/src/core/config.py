@@ -45,5 +45,17 @@ class Settings(BaseSettings):
     redis: RedisSettings = RedisSettings()
     oauth = OAuthSettings = OAuthSettings()
 
+    default_rate_limit: int = Field(10, env='DEFAULT_RATE_LIMIT')
+
+    tracer_enabled: bool = Field(True, env='TRACER_ENABLED')
+    tracer_host: str = Field('localhost', env='TRACER_HOST')
+    tracer_port: int = Field(6831, env='TRACER_PORT')
+
+    yandex_id: str = Field(..., env='YANDEX_ID')
+    yandex_secret: str = Field(..., env='YANDEX_SECRET')
+
+    vk_id: str = Field(..., env='VK_ID')
+    vk_secret: str = Field(..., env='VK_SECRET')
+
 
 settings = Settings()
