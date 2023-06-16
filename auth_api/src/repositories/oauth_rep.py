@@ -6,7 +6,6 @@ from flask_sqlalchemy import session
 from .oauth import oauth
 
 class OAuthRepository:
-    YANDEX = 'yandex'
 
     def __init__(self, db_session: session):
         self._postgres_session = db_session
