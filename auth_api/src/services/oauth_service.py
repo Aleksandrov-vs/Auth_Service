@@ -1,17 +1,13 @@
-import datetime
 import uuid
-from datetime import timedelta
+from datetime import datetime, timedelta
 import json
 import logging
 from functools import lru_cache
 from http import HTTPStatus
-from typing import Tuple
 
-from flask_jwt_extended import decode_token
-from src.core.config import settings
 from src.repositories.token_rep import TokenRepository
 from src.repositories.oauth_rep import OAuthRepository
-from src.utils.extensions import create_hash, create_tokens, check_password
+from src.utils.extensions import create_hash, create_tokens
 
 
 class OAuthService:
