@@ -85,3 +85,14 @@
 
 # Swagger UI 
 Можно посмотреть по url: `/api/v1/auth/openapi/`
+
+# создание суперпользователя
+1. запустите проект 
+```bash
+    docker-compose up --build
+```
+2. запустите bash в контейнере  
+```bash
+    docker exec -it <container_id> bash
+```
+2.  создание суперюзера введя команду`flask create_superuser` (далее следуйте указаниям в консоли)
