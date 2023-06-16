@@ -65,3 +65,5 @@
 172.22.0.1 - - [14/Jun/2023:12:26:23 +0000] "POST /api/v1/auth/register HTTP/1.1" 409 51 "-" "PostmanRuntime/7.32.2" "-" 373ea4009e2e0fe92ec2df821bbad835
 172.22.0.1 - - [14/Jun/2023:12:26:23 +0000] "POST /api/v1/auth/register HTTP/1.1" 429 28 "-" "PostmanRuntime/7.32.2" "-" 6544a18a7e769d23a2c3b247ddfb2557
 172.22.0.1 - - [14/Jun/2023:12:26:27 +0000] "POST /api/v1/auth/register HTTP/1.1" 429 28 "-" "PostmanRuntime/7.32.2" "-" bf47e0ed8a69f3f7305e0035fb9d4202
+172.21.0.1 - - [16/Jun/2023:16:10:59 +0000] "POST /api/v1/auth/register HTTP/1.1" 200 784 "-" "PostmanRuntime/7.32.2" "-" 5d325b35c6d85d3669e1f1607ae22244
+172.21.0.1 - - [16/Jun/2023:16:11:19 +0000] "POST /api/v1/auth/login HTTP/1.1" 200 784 "-" "PostmanRuntime/7.32.2" "-" e36c7d3e3d1e2c700068bc3259498434
