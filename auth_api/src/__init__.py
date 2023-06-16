@@ -4,6 +4,7 @@ import redis
 from flask import Flask, request
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
+from flask_migrate import Migrate
 from opentelemetry import trace
 from opentelemetry.instrumentation.flask import FlaskInstrumentor
 
@@ -81,6 +82,10 @@ def create_app():
 
     # Database initialization
     db.init_app(app)
+
+    migrate = Migrate()
+    migrate.init_app(app, db)
+
     oauth.init_app(app)
     security.init_app(app)
     app.logger.info('Initialized database complete.')
