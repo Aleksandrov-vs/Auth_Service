@@ -47,6 +47,7 @@ class Settings(BaseSettings):
     oauth = OAuthSettings = OAuthSettings()
 
     default_rate_limit: int = Field(10, env='DEFAULT_RATE_LIMIT')
+    rate_limit_enabled: bool = Field(True, env='RATE_LIMIT_ENABLED')
 
     tracer_enabled: bool = Field(True, env='TRACER_ENABLED')
     tracer_host: str = Field('localhost', env='TRACER_HOST')
